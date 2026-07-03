@@ -143,17 +143,17 @@ export default function DiscoverView({
   return (
     <div className="space-y-6 pb-12 fade-in">
       {/* Hero Banner with Play Now Broadcast & Host Actions */}
-      <div className="rounded-3xl bg-white dark:bg-[#121212] p-6 sm:p-8 border border-black/5 dark:border-white/10 shadow-sm">
+      <div className="game-card p-6 sm:p-8">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="space-y-2 max-w-xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#10B981]/10 border border-[#10B981]/20 text-[#10B981] text-xs font-bold uppercase tracking-wider">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#58CC02]/15 border-2 border-[#58CC02]/30 text-[#58CC02] text-xs font-black uppercase tracking-wider">
               <Zap className="w-3.5 h-3.5 fill-current" />
-              <span>Real-Time Local Sports Network</span>
+              <span>REAL-TIME LOCAL SPORTS NETWORK</span>
             </div>
-            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[#171717] dark:text-white">
+            <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-[#131F24] dark:text-white">
               Find Games. Match Instantly.
             </h1>
-            <p className="text-sm sm:text-base text-[#71717A] leading-relaxed">
+            <p className="text-sm sm:text-base font-bold text-[#778B96] dark:text-[#A5B2BA] leading-relaxed">
               Discover public games around you, check distance in real time, and connect with players via instant DM or team chat.
             </p>
           </div>
@@ -161,17 +161,17 @@ export default function DiscoverView({
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto shrink-0">
             <button
               onClick={onOpenPlayNowModal || onOpenHostModal}
-              className="play-now py-3.5 px-6 font-bold text-sm flex items-center justify-center gap-2 transition-transform hover:scale-105 active:scale-95"
+              className="duo-btn-green !py-3.5 !px-6 text-sm flex items-center justify-center gap-2"
             >
               <Zap className="w-4 h-4 fill-current" />
-              <span>Broadcast &quot;Play Now&quot;</span>
+              <span>BROADCAST &quot;PLAY NOW&quot;</span>
             </button>
             <button
               onClick={onOpenHostModal}
-              className="bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 border border-black/10 dark:border-white/10 text-[#171717] dark:text-white font-bold py-3.5 px-6 rounded-3xl text-sm transition-all flex items-center justify-center gap-2"
+              className="py-3.5 px-6 rounded-2xl bg-white dark:bg-[#1f2e35] text-[#131F24] dark:text-white font-black text-sm uppercase tracking-wider border-2 border-b-[4px] border-[#E5E5E5] dark:border-[#37464F] active:translate-y-[2px] active:border-b-2 transition-all flex items-center justify-center gap-2 select-none cursor-pointer shadow-sm"
             >
-              <UserPlus className="w-4 h-4" />
-              <span>Host a Game</span>
+              <UserPlus className="w-4 h-4 text-[#1CB0F6]" />
+              <span>HOST A GAME</span>
             </button>
           </div>
         </div>
@@ -402,19 +402,19 @@ export default function DiscoverView({
 
                       {/* Players Progress Bar */}
                       <div className="space-y-1.5 mb-4">
-                        <div className="flex items-center justify-between text-xs font-semibold">
-                          <span className="flex items-center gap-1 text-[#71717A]">
-                            <Users className="w-3.5 h-3.5" />
-                            <span>Players</span>
+                        <div className="flex items-center justify-between text-xs font-extrabold uppercase tracking-wide">
+                          <span className="flex items-center gap-1 text-[#778B96] dark:text-[#A5B2BA]">
+                            <Users className="w-3.5 h-3.5 text-[#58CC02]" />
+                            <span>PLAYERS</span>
                           </span>
-                          <span className={isFull ? "text-[#EF4444]" : "text-[#171717] dark:text-white"}>
-                            {game.currentPlayers} / {game.maxPlayers} {isFull && "(Full)"}
+                          <span className={isFull ? "text-[#FF4B4B] font-black" : "text-[#131F24] dark:text-white font-black"}>
+                            {game.currentPlayers} / {game.maxPlayers} {isFull && "• FULL"}
                           </span>
                         </div>
-                        <div className="w-full h-2 rounded-full bg-[#E4E4E7] dark:bg-[#262626] overflow-hidden">
+                        <div className="w-full h-3.5 rounded-full bg-[#E5E5E5] dark:bg-[#283941] p-0.5 border-2 border-[#CCCCCC] dark:border-[#1C2A30] overflow-hidden">
                           <div
                             className={`h-full rounded-full transition-all duration-500 ${
-                              isFull ? "bg-[#EF4444]" : "bg-[#22C55E]"
+                              isFull ? "bg-[#FF4B4B]" : "bg-[#58CC02]"
                             }`}
                             style={{ width: `${percentFull}%` }}
                           />
@@ -429,23 +429,23 @@ export default function DiscoverView({
                             onJoinGame(game.id);
                           }}
                           disabled={isFull && !joined}
-                          className={`flex-1 py-2.5 px-4 rounded-2xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${
+                          className={`flex-1 py-3 px-4 rounded-2xl text-xs sm:text-sm font-black uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all border-2 select-none cursor-pointer ${
                             joined
-                              ? "bg-[#22C55E]/15 text-[#16A34A] dark:text-[#22C55E] border border-[#22C55E]/30"
+                              ? "bg-[#58CC02]/15 text-[#58CC02] border-b-[4px] border-[#58CC02]"
                               : isFull
-                              ? "bg-[#F4F4F5] dark:bg-[#1F1F1F] text-[#71717A] cursor-not-allowed"
-                              : "bg-[#22C55E] hover:bg-[#16A34A] text-white shadow-md shadow-[#22C55E]/20"
+                              ? "bg-[#E5E5E5] dark:bg-[#283941] text-[#778B96] border-b-[4px] border-[#CCCCCC] dark:border-[#1C2A30] cursor-not-allowed"
+                              : "bg-[#58CC02] hover:bg-[#46A302] text-white border-b-[4px] border-[#388000] active:translate-y-[2px] active:border-b-2 shadow-md"
                           }`}
                         >
                           {joined ? (
                             <>
-                              <Check className="w-4 h-4" />
-                              <span>Joined</span>
+                              <Check className="w-4 h-4 text-[#58CC02]" />
+                              <span>JOINED SQUAD</span>
                             </>
                           ) : isFull ? (
-                            <span>Game Full</span>
+                            <span>GAME FULL</span>
                           ) : (
-                            <span>Join Game</span>
+                            <span>JOIN GAME</span>
                           )}
                         </button>
 
@@ -455,17 +455,17 @@ export default function DiscoverView({
                             onOpenChat(game);
                           }}
                           title="Open Game Chat"
-                          className="p-2.5 rounded-2xl bg-[#F4F4F5] dark:bg-[#1F1F1F] hover:bg-[#E4E4E7] dark:hover:bg-[#262626] text-[#171717] dark:text-white transition-colors"
+                          className="p-3 rounded-2xl bg-white dark:bg-[#1f2e35] hover:bg-gray-50 dark:hover:bg-[#283941] text-[#131F24] dark:text-white border-2 border-b-[4px] border-[#E5E5E5] dark:border-[#37464F] active:translate-y-[2px] active:border-b-2 transition-all cursor-pointer select-none shadow-sm"
                         >
-                          <MessageCircle className="w-4 h-4 text-[#22C55E]" />
+                          <MessageCircle className="w-4 h-4 text-[#58CC02]" />
                         </button>
 
                         <button
                           onClick={(e) => openDirections(e, game)}
                           title="Get Navigation Directions"
-                          className="p-2.5 rounded-2xl bg-[#F4F4F5] dark:bg-[#1F1F1F] hover:bg-[#E4E4E7] dark:hover:bg-[#262626] text-[#171717] dark:text-white transition-colors"
+                          className="p-3 rounded-2xl bg-[#1CB0F6] hover:bg-[#1899D6] text-white border-2 border-b-[4px] border-[#1899D6] active:translate-y-[2px] active:border-b-2 transition-all cursor-pointer select-none shadow-sm"
                         >
-                          <Navigation className="w-4 h-4 text-[#3B82F6]" />
+                          <Navigation className="w-4 h-4" />
                         </button>
                       </div>
                     </div>

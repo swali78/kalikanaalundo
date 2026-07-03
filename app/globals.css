@@ -7,61 +7,61 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* CIRCLE Brand Theme - Minimal, Modern, Premium, Mobile-first */
+/* CIRCLE Brand Theme - Duolingo Gamified UI/UX Design System */
 @theme inline {
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-nunito), var(--font-outfit), sans-serif;
   --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-geist-sans);
+  --font-heading: var(--font-outfit), var(--font-nunito), sans-serif;
   
-  /* Brand Colors */
-  --color-primary: #22C55E;
+  /* Duolingo Brand Colors */
+  --color-primary: #58CC02;
   --color-primary-foreground: #ffffff;
-  --color-accent: #3B82F6;
+  --color-accent: #1CB0F6;
   --color-accent-foreground: #ffffff;
   
-  --color-background: #FAFAFA;
-  --color-foreground: #171717;
+  --color-background: #F7F7F7;
+  --color-foreground: #131F24;
   --color-card: #ffffff;
-  --color-card-foreground: #171717;
+  --color-card-foreground: #131F24;
   --color-popover: #ffffff;
-  --color-popover-foreground: #171717;
-  --color-muted: #F4F4F5;
-  --color-muted-foreground: #71717A;
-  --color-border: #E4E4E7;
-  --color-input: #FAFAFA;
-  --color-ring: #22C55E;
-  --color-destructive: #EF4444;
+  --color-popover-foreground: #131F24;
+  --color-muted: #E5E5E5;
+  --color-muted-foreground: #778B96;
+  --color-border: #E5E5E5;
+  --color-input: #ffffff;
+  --color-ring: #58CC02;
+  --color-destructive: #FF4B4B;
   --color-destructive-foreground: #ffffff;
-  --color-secondary: #F4F4F5;
-  --color-secondary-foreground: #171717;
+  --color-secondary: #E5E5E5;
+  --color-secondary-foreground: #131F24;
 }
 
 :root {
-  --background: #FAFAFA;
-  --foreground: #171717;
+  --background: #F7F7F7;
+  --foreground: #131F24;
   --card: #ffffff;
-  --card-foreground: #171717;
+  --card-foreground: #131F24;
   --popover: #ffffff;
-  --popover-foreground: #171717;
-  --primary: #22C55E;
+  --popover-foreground: #131F24;
+  --primary: #58CC02;
   --primary-foreground: #ffffff;
-  --secondary: #F4F4F5;
-  --secondary-foreground: #171717;
-  --muted: #F4F4F5;
-  --muted-foreground: #71717A;
-  --accent: #3B82F6;
+  --secondary: #E5E5E5;
+  --secondary-foreground: #131F24;
+  --muted: #E5E5E5;
+  --muted-foreground: #778B96;
+  --accent: #1CB0F6;
   --accent-foreground: #ffffff;
-  --destructive: #EF4444;
+  --destructive: #FF4B4B;
   --destructive-foreground: #ffffff;
-  --border: #E4E4E7;
-  --input: #FAFAFA;
-  --ring: #22C55E;
-  --radius: 16px;
+  --border: #E5E5E5;
+  --input: #ffffff;
+  --ring: #58CC02;
+  --radius: 20px;
   
-  /* Premium soft shadows */
-  --shadow-soft: 0 1px 3px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.04);
-  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.06);
-  --shadow-modal: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  /* Duolingo tactile chunky shadows */
+  --shadow-soft: 0 4px 0 #E5E5E5;
+  --shadow-card: 0 5px 0 #E5E5E5;
+  --shadow-modal: 0 10px 30px rgba(0, 0, 0, 0.15), 0 6px 0 #37464F;
   
   /* Spacing scale for premium feel */
   --space-xs: 0.5rem;
@@ -73,25 +73,27 @@
 }
 
 .dark {
-  --background: #0A0A0A;
-  --foreground: #FAFAFA;
-  --card: #121212;
-  --card-foreground: #FAFAFA;
-  --popover: #121212;
-  --popover-foreground: #FAFAFA;
-  --primary: #22C55E;
-  --primary-foreground: #0A0A0A;
-  --secondary: #1F1F1F;
-  --secondary-foreground: #FAFAFA;
-  --muted: #1F1F1F;
-  --muted-foreground: #A1A1AA;
-  --accent: #3B82F6;
+  --background: #131F24;
+  --foreground: #ffffff;
+  --card: #1f2e35;
+  --card-foreground: #ffffff;
+  --popover: #1f2e35;
+  --popover-foreground: #ffffff;
+  --primary: #58CC02;
+  --primary-foreground: #ffffff;
+  --secondary: #283941;
+  --secondary-foreground: #ffffff;
+  --muted: #283941;
+  --muted-foreground: #778B96;
+  --accent: #1CB0F6;
   --accent-foreground: #ffffff;
-  --destructive: #EF4444;
+  --destructive: #FF4B4B;
   --destructive-foreground: #ffffff;
-  --border: #262626;
-  --input: #1F1F1F;
-  --ring: #22C55E;
+  --border: #37464F;
+  --input: #1f2e35;
+  --ring: #58CC02;
+  --shadow-soft: 0 4px 0 #37464F;
+  --shadow-card: 0 5px 0 #37464F;
 }
 
 /* Global Premium Styles */
@@ -106,25 +108,21 @@
   }
   
   body {
-    @apply bg-[#FAFAFA] text-[#171717] dark:bg-[#0A0A0A] dark:text-[#FAFAFA];
+    @apply bg-[#F7F7F7] text-[#131F24] dark:bg-[#131F24] dark:text-white font-sans antialiased selection:bg-[#58CC02] selection:text-white;
   }
   
-  /* Premium rounded everything */
+  /* Duolingo chunky rounded cards */
   .card, .game-card {
-    border-radius: 20px;
-    box-shadow: var(--shadow-card);
-    transition: transform 0.2s cubic-bezier(0.23, 1, 0.32, 1), 
-                box-shadow 0.2s cubic-bezier(0.23, 1, 0.32, 1);
+    @apply bg-white dark:bg-[#1f2e35] rounded-3xl border-2 border-b-[5px] border-[#E5E5E5] dark:border-[#37464F] transition-all duration-150;
   }
   
   .game-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px -15px rgba(0, 0, 0, 0.1), 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    @apply -translate-y-1 border-b-[7px] border-[#D5D5D5] dark:border-[#4A5E6A];
   }
   
-  /* Clean typography */
+  /* Clean bold Duolingo typography */
   h1, h2, h3 {
-    @apply tracking-[-0.025em] font-semibold;
+    @apply tracking-[-0.02em] font-extrabold;
   }
   
   /* Large tap targets for mobile */
@@ -132,48 +130,48 @@
     min-height: 44px;
   }
   
-  /* Soft inputs */
+  /* Soft tactile inputs */
   input, textarea, select {
-    @apply rounded-2xl border border-[#E4E4E7] bg-white px-4 py-3 text-sm transition-all placeholder:text-[#71717A] focus:border-[#22C55E] focus:ring-1 focus:ring-[#22C55E] dark:bg-[#121212] dark:border-[#262626];
+    @apply rounded-2xl border-2 border-b-[4px] border-[#E5E5E5] bg-white px-4 py-3.5 text-sm font-semibold transition-all placeholder:text-[#778B96] focus:border-[#1CB0F6] focus:outline-none focus:ring-2 focus:ring-[#1CB0F6]/20 dark:bg-[#1f2e35] dark:border-[#37464F] dark:text-white;
   }
 }
 
-/* Custom Component Styles for CIRCLE */
+/* Custom Component Styles for CIRCLE — Duolingo Edition */
 @layer components {
   .section {
     @apply max-w-7xl mx-auto px-6;
   }
   
   .premium-card {
-    @apply bg-white dark:bg-[#121212] rounded-3xl shadow-[0_1px_2px_rgba(0,0,0,0.04),0_4px_12px_rgba(0,0,0,0.06)] border border-[#E4E4E7]/60 dark:border-[#262626];
+    @apply bg-white dark:bg-[#1f2e35] rounded-3xl border-2 border-b-[5px] border-[#E5E5E5] dark:border-[#37464F] shadow-sm;
   }
   
   .sport-chip {
-    @apply inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-medium bg-[#F4F4F5] dark:bg-[#1F1F1F] hover:bg-[#E4E4E7] transition-colors cursor-pointer;
+    @apply inline-flex items-center gap-1.5 px-4 py-2 rounded-2xl text-sm font-extrabold bg-[#E5E5E5] dark:bg-[#283941] text-[#778B96] dark:text-[#A5B2BA] border-b-[3px] border-[#CCCCCC] dark:border-[#1C2A30] active:translate-y-[2px] active:border-b-0 hover:bg-[#D5D5D5] dark:hover:bg-[#324752] transition-all cursor-pointer select-none;
   }
   
   .sport-chip.active {
-    @apply bg-[#22C55E] text-white dark:bg-[#22C55E] dark:text-[#0A0A0A];
+    @apply bg-[#58CC02] text-white dark:bg-[#58CC02] dark:text-white border-[#388000] dark:border-[#388000] hover:bg-[#46A302];
   }
   
   .game-card {
-    @apply bg-white dark:bg-[#121212] rounded-3xl overflow-hidden border border-[#E4E4E7]/50 dark:border-[#262626] cursor-pointer;
+    @apply bg-white dark:bg-[#1f2e35] rounded-3xl overflow-hidden border-2 border-b-[5px] border-[#E5E5E5] dark:border-[#37464F] cursor-pointer transition-all duration-150;
   }
   
   .nav-link {
-    @apply text-sm font-medium text-[#71717A] hover:text-[#171717] dark:hover:text-white transition-colors px-4 py-2;
+    @apply text-sm font-extrabold uppercase tracking-wider text-[#778B96] dark:text-[#A5B2BA] hover:text-[#1CB0F6] dark:hover:text-[#58CC02] transition-colors px-4 py-2.5 rounded-2xl hover:bg-[#E5E5E5]/50 dark:hover:bg-[#283941];
   }
   
   .nav-link.active {
-    @apply text-[#171717] dark:text-white;
+    @apply text-[#1CB0F6] dark:text-[#58CC02] bg-[#1CB0F6]/10 dark:bg-[#58CC02]/15 border-b-[3px] border-[#1CB0F6] dark:border-[#58CC02];
   }
   
   .primary-btn {
-    @apply bg-[#22C55E] hover:bg-[#16A34A] text-white font-semibold rounded-full px-8 py-3.5 transition-all active:scale-[0.985];
+    @apply bg-[#58CC02] hover:bg-[#46A302] text-white font-black uppercase tracking-wider border-b-[5px] border-[#388000] active:translate-y-1 active:border-b-0 rounded-2xl py-3.5 px-8 transition-all shadow-md cursor-pointer text-center flex items-center justify-center gap-2 select-none;
   }
   
   .secondary-btn {
-    @apply border border-[#E4E4E7] hover:bg-[#F4F4F5] dark:hover:bg-[#1F1F1F] font-medium rounded-full px-6 py-3 transition-all;
+    @apply bg-white dark:bg-[#1f2e35] hover:bg-gray-50 dark:hover:bg-[#283941] text-[#1CB0F6] dark:text-[#58CC02] font-black uppercase tracking-wider border-2 border-b-[5px] border-[#E5E5E5] dark:border-[#37464F] active:translate-y-1 active:border-b-2 rounded-2xl py-3 px-6 transition-all shadow-md cursor-pointer text-center flex items-center justify-center gap-2 select-none;
   }
   
   .stat {
@@ -181,42 +179,42 @@
   }
   
   .stat-number {
-    @apply text-3xl font-semibold tracking-tighter;
+    @apply text-3xl font-black tracking-tighter text-[#58CC02];
   }
   
   .filter-chip {
-    @apply px-4 py-1.5 text-sm rounded-full border border-[#E4E4E7] bg-white dark:bg-[#121212] hover:bg-[#F4F4F5] cursor-pointer transition-all;
+    @apply px-4 py-2 text-sm font-extrabold rounded-2xl border-2 border-b-[4px] border-[#E5E5E5] dark:border-[#37464F] bg-white dark:bg-[#1f2e35] hover:bg-[#F7F7F7] dark:hover:bg-[#283941] cursor-pointer transition-all active:translate-y-[2px] active:border-b-2 select-none;
   }
   
   .filter-chip.active {
-    @apply bg-[#22C55E] text-white border-[#22C55E];
+    @apply bg-[#1CB0F6] text-white border-[#1899D6] dark:bg-[#1CB0F6] dark:border-[#1899D6];
   }
   
-  /* Glassmorphism Utilities */
+  /* Duolingo Glass/Tactile Utilities */
   .glass-card {
-    @apply bg-white/80 dark:bg-[#121212]/80 backdrop-blur-md rounded-3xl shadow-[0_4px_24px_rgba(0,0,0,0.06)] border border-white/40 dark:border-white/10 transition-all;
+    @apply bg-white/95 dark:bg-[#1f2e35]/95 backdrop-blur-md rounded-3xl border-2 border-b-[5px] border-[#E5E5E5] dark:border-[#37464F] transition-all;
   }
 
   .glass-navbar {
-    @apply bg-white/70 dark:bg-[#0A0A0A]/70 backdrop-blur-lg border-b border-black/5 dark:border-white/10 sticky top-0 z-50;
+    @apply bg-white/95 dark:bg-[#131F24]/95 backdrop-blur-lg border-b-2 border-[#E5E5E5] dark:border-[#37464F] sticky top-0 z-50;
   }
 
   .glass-modal {
-    @apply bg-white/90 dark:bg-[#121212]/90 backdrop-blur-xl rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.2)] border border-white/30 dark:border-white/10 overflow-hidden;
+    @apply bg-white dark:bg-[#1f2e35] rounded-3xl border-2 border-b-[6px] border-[#E5E5E5] dark:border-[#37464F] shadow-2xl overflow-hidden;
   }
 
-  /* High-Contrast Chat bubbles (WCAG AA/AAA compliant) */
+  /* High-Contrast Chat bubbles */
   .chat-bubble-other {
-    @apply bg-[#E4E4E7] dark:bg-[#262626] text-[#0F172A] dark:text-[#F8FAFC] font-normal rounded-3xl rounded-bl-sm px-4 py-3 text-sm max-w-[80%] shadow-sm;
+    @apply bg-[#E5E5E5] dark:bg-[#283941] text-[#131F24] dark:text-white font-semibold rounded-3xl rounded-bl-sm px-4 py-3 text-sm max-w-[80%] border-b-[3px] border-[#CCCCCC] dark:border-[#1C2A30];
   }
   
   .chat-bubble-me {
-    @apply bg-[#16A34A] dark:bg-[#22C55E] text-white dark:text-[#052E16] font-medium rounded-3xl rounded-br-sm px-4 py-3 text-sm max-w-[80%] ml-auto shadow-sm;
+    @apply bg-[#58CC02] text-white font-extrabold rounded-3xl rounded-br-sm px-4 py-3 text-sm max-w-[80%] ml-auto border-b-[3px] border-[#388000];
   }
   
   /* Play Now special highlight */
   .play-now {
-    @apply bg-gradient-to-br from-[#22C55E] to-[#16A34A] text-white rounded-3xl shadow-[0_10px_30px_rgba(34,197,94,0.3)];
+    @apply bg-[#58CC02] hover:bg-[#46A302] text-white rounded-3xl border-b-[6px] border-[#388000] active:translate-y-1 active:border-b-0 transition-all shadow-lg;
   }
 
   /* Duolingo-Inspired Chunky 3D Buttons & Elements */

@@ -88,58 +88,66 @@ export default function MyGamesView({
               <div
                 key={game.id}
                 onClick={() => onOpenChat(game)}
-                className="game-card p-5 space-y-4 flex flex-col justify-between hover:border-[#22C55E]/50 transition-all cursor-pointer group"
+                className="game-card p-6 space-y-4 flex flex-col justify-between hover:border-[#58CC02] transition-all cursor-pointer group relative overflow-hidden"
               >
                 <div>
                   <div className="flex items-center justify-between gap-2 mb-3">
-                    <span className="px-3 py-1 rounded-full text-xs font-bold bg-[#22C55E]/15 text-[#16A34A] dark:text-[#22C55E] flex items-center gap-1.5">
-                      <span>{getSportEmoji(game.sport)}</span>
+                    <span className="px-3 py-1 rounded-xl text-xs font-black bg-[#58CC02]/15 text-[#58CC02] border-2 border-b-2 border-[#58CC02]/30 flex items-center gap-1.5 uppercase">
+                      <span className="text-sm">{getSportEmoji(game.sport)}</span>
                       <span>{game.sport}</span>
                     </span>
-                    <span className={`px-3 py-1 rounded-full text-xs font-bold ${
-                      isHost ? "bg-[#3B82F6]/15 text-[#3B82F6]" : "bg-[#F4F4F5] dark:bg-[#1F1F1F] text-[#71717A]"
+                    <span className={`px-3 py-1 rounded-xl text-xs font-black border-2 border-b-2 uppercase tracking-wide flex items-center gap-1 ${
+                      isHost ? "bg-[#FFC800]/20 text-[#FFC800] border-[#FFC800]/40 shadow-sm" : "bg-[#1CB0F6]/15 text-[#1CB0F6] border-[#1CB0F6]/30"
                     }`}>
-                      {isHost ? "👑 You Host" : "✅ Joined"}
+                      {isHost ? (
+                        <>
+                          <Trophy className="w-3.5 h-3.5 text-[#FFC800]" />
+                          <span>👑 YOU HOST</span>
+                        </>
+                      ) : (
+                        <span>✅ JOINED SQUAD</span>
+                      )}
                     </span>
                   </div>
 
-                  <h3 className="font-bold text-lg text-[#171717] dark:text-white group-hover:text-[#22C55E] transition-colors">
+                  <h3 className="font-black text-xl text-[#131F24] dark:text-white group-hover:text-[#58CC02] transition-colors tracking-tight">
                     {game.venue}
                   </h3>
-                  <p className="text-xs text-[#71717A] mt-0.5 flex items-center gap-1 font-medium">
-                    <MapPin className="w-3 h-3 text-[#71717A]" />
+                  <p className="text-xs text-[#778B96] dark:text-[#A5B2BA] mt-1 flex items-center gap-1 font-bold uppercase tracking-wider">
+                    <MapPin className="w-3.5 h-3.5 text-[#FF4B4B]" />
                     <span>{game.district}</span>
                   </p>
 
-                  <div className="flex items-center gap-4 mt-3 pt-3 border-t border-[#E4E4E7]/60 dark:border-[#262626] text-xs font-semibold text-[#171717] dark:text-white">
+                  <div className="flex items-center gap-4 mt-4 pt-3 border-t-2 border-[#E5E5E5] dark:border-[#283941] text-xs font-extrabold text-[#131F24] dark:text-white uppercase tracking-wide">
                     <div className="flex items-center gap-1.5">
-                      <Calendar className="w-3.5 h-3.5 text-[#22C55E]" />
+                      <Calendar className="w-3.5 h-3.5 text-[#58CC02]" />
                       <span>{game.date}</span>
                     </div>
                     <div className="flex items-center gap-1.5">
-                      <Clock className="w-3.5 h-3.5 text-[#22C55E]" />
-                      <span>{game.time} ({game.duration}m)</span>
+                      <Clock className="w-3.5 h-3.5 text-[#58CC02]" />
+                      <span>{game.time} ({game.duration}M)</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="pt-2 flex items-center gap-2">
+                <div className="pt-3 flex items-center gap-2.5">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       onOpenChat(game);
                     }}
-                    className="flex-1 py-2.5 px-4 rounded-2xl bg-[#22C55E] hover:bg-[#16A34A] text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-md shadow-[#22C55E]/20"
+                    className="flex-1 py-3 px-4 rounded-2xl bg-[#58CC02] hover:bg-[#46A302] text-white text-xs sm:text-sm font-black uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all border-2 border-b-[4px] border-[#388000] active:translate-y-[2px] active:border-b-2 shadow-md"
                   >
                     <MessageCircle className="w-4 h-4" />
-                    <span>Open Team Chat</span>
+                    <span>OPEN TEAM CHAT</span>
                   </button>
                   <button
                     onClick={(e) => openDirections(e, game)}
                     title="Get Directions"
-                    className="p-2.5 rounded-2xl bg-[#F4F4F5] dark:bg-[#1F1F1F] hover:bg-[#E4E4E7] text-[#171717] dark:text-white transition-colors"
+                    className="px-4 py-3 rounded-2xl bg-white dark:bg-[#1f2e35] hover:bg-gray-50 dark:hover:bg-[#283941] text-[#131F24] dark:text-white border-2 border-b-[4px] border-[#E5E5E5] dark:border-[#37464F] active:translate-y-[2px] active:border-b-2 transition-all flex items-center gap-1.5 text-xs font-black uppercase tracking-wider shadow-sm"
                   >
-                    <Navigation className="w-4 h-4 text-[#3B82F6]" />
+                    <Navigation className="w-4 h-4 text-[#1CB0F6]" />
+                    <span>ROUTE</span>
                   </button>
                 </div>
               </div>

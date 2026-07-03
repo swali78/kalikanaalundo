@@ -99,24 +99,24 @@ export default function HostGameModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm fade-in">
-      <div className="glass-modal w-full max-w-lg p-6 sm:p-8 bg-white dark:bg-[#121212] relative max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between pb-4 border-b border-[#E4E4E7] dark:border-[#262626] mb-5">
+      <div className="glass-modal w-full max-w-lg p-6 sm:p-8 bg-white dark:bg-[#1f2e35] rounded-[2rem] border-2 border-b-[8px] border-[#E5E5E5] dark:border-[#37464F] relative max-h-[90vh] overflow-y-auto shadow-2xl">
+        <div className="flex items-center justify-between pb-4 border-b-2 border-[#E5E5E5] dark:border-[#283941] mb-5">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-2xl bg-[#22C55E]/15 flex items-center justify-center text-[#22C55E] font-bold text-lg">
+            <div className="w-10 h-10 rounded-2xl bg-[#58CC02]/20 border-2 border-b-4 border-[#58CC02]/40 flex items-center justify-center text-[#58CC02] font-black text-xl">
               🚀
             </div>
             <div>
-              <h3 className="font-bold text-lg text-[#171717] dark:text-white">
+              <h3 className="font-black text-xl text-[#131F24] dark:text-white tracking-tight">
                 Host a New Game
               </h3>
-              <p className="text-xs text-[#71717A]">
+              <p className="text-xs font-bold text-[#778B96] dark:text-[#A5B2BA]">
                 Create a public session & bring players together
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-full hover:bg-[#E4E4E7] dark:hover:bg-[#262626] text-[#71717A]"
+            className="p-2 rounded-xl hover:bg-[#E5E5E5] dark:hover:bg-[#283941] text-[#778B96] transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -124,7 +124,7 @@ export default function HostGameModal({
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-[#71717A] mb-1.5">
+            <label className="block text-xs font-black uppercase tracking-wider text-[#778B96] dark:text-[#A5B2BA] mb-1.5">
               Select Sport
             </label>
             <div className="flex flex-wrap gap-2">
@@ -133,8 +133,8 @@ export default function HostGameModal({
                   key={s}
                   type="button"
                   onClick={() => setSport(s)}
-                  className={`sport-chip !py-1 !px-3 text-xs ${
-                    sport === s ? "active font-bold" : ""
+                  className={`sport-chip !py-1.5 !px-3.5 text-xs font-black uppercase tracking-wide border-2 border-b-2 ${
+                    sport === s ? "bg-[#58CC02] text-white border-[#388000] scale-105" : "bg-[#E5E5E5] dark:bg-[#283941] text-[#131F24] dark:text-white border-[#CCCCCC] dark:border-[#1C2A30]"
                   }`}
                 >
                   <span>{getSportEmoji(s)}</span>
@@ -291,14 +291,14 @@ export default function HostGameModal({
           <button
             type="submit"
             disabled={loading}
-            className="w-full primary-btn flex items-center justify-center gap-2 mt-4 shadow-lg shadow-[#22C55E]/20"
+            className="w-full duo-btn-green !py-4 text-sm font-black uppercase tracking-wider flex items-center justify-center gap-2 mt-4 shadow-xl cursor-pointer select-none"
           >
             {loading ? (
-              <span>Creating Game...</span>
+              <span>CREATING GAME...</span>
             ) : (
               <>
-                <Sparkles className="w-4 h-4" />
-                <span>Publish Game</span>
+                <Sparkles className="w-5 h-5" />
+                <span>PUBLISH GAME 🚀</span>
               </>
             )}
           </button>

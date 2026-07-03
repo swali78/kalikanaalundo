@@ -263,16 +263,16 @@ export default function HomePage() {
 
                 {/* Organized Standard Sports & Location Badges */}
                 <div className="grid grid-cols-2 gap-3 w-full max-w-sm pt-2">
-                  <div className="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-white dark:bg-[#131F24] border-2 border-b-4 border-[#E5E5E5] dark:border-[#37464F] shadow-sm text-xs font-black text-[#58CC02]">
+                  <div className="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-white dark:bg-[#1f2e35] border-2 border-b-[4px] border-[#E5E5E5] dark:border-[#37464F] shadow-sm text-xs font-black text-[#58CC02]">
                     <span>🏸 BADMINTON</span>
                   </div>
-                  <div className="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-white dark:bg-[#131F24] border-2 border-b-4 border-[#E5E5E5] dark:border-[#37464F] shadow-sm text-xs font-black text-[#1CB0F6]">
+                  <div className="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-white dark:bg-[#1f2e35] border-2 border-b-[4px] border-[#E5E5E5] dark:border-[#37464F] shadow-sm text-xs font-black text-[#1CB0F6]">
                     <span>⚽ FOOTBALL 5V5</span>
                   </div>
-                  <div className="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-white dark:bg-[#131F24] border-2 border-b-4 border-[#E5E5E5] dark:border-[#37464F] shadow-sm text-xs font-black text-[#FF4B4B]">
+                  <div className="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-white dark:bg-[#1f2e35] border-2 border-b-[4px] border-[#E5E5E5] dark:border-[#37464F] shadow-sm text-xs font-black text-[#FF4B4B]">
                     <span>📍 ERNAKULAM TURF</span>
                   </div>
-                  <div className="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-white dark:bg-[#131F24] border-2 border-b-4 border-[#E5E5E5] dark:border-[#37464F] shadow-sm text-xs font-black text-[#FFC800]">
+                  <div className="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-white dark:bg-[#1f2e35] border-2 border-b-[4px] border-[#E5E5E5] dark:border-[#37464F] shadow-sm text-xs font-black text-[#FFC800]">
                     <span>🏏 CRICKET BOX</span>
                   </div>
                 </div>
@@ -291,11 +291,11 @@ export default function HomePage() {
                   <span>KERALA'S #1 TURF SPORTS NETWORK</span>
                 </div>
 
-                <h1 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight text-[#171717] dark:text-white leading-[1.15]">
+                <h1 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight text-[#131F24] dark:text-white leading-[1.15]">
                   The free, fun, and <span className="text-[#58CC02] underline decoration-wavy decoration-[#58CC02]/40">real-time</span> way to find turf players!
                 </h1>
 
-                <p className="text-base sm:text-lg text-[#71717A] dark:text-[#A5A5A5] font-bold max-w-xl mx-auto lg:mx-0 leading-relaxed">
+                <p className="text-base sm:text-lg text-[#778B96] dark:text-[#A5A5A5] font-bold max-w-xl mx-auto lg:mx-0 leading-relaxed">
                   Never miss a match because your squad was one player short. Discover verified athletes across Ernakulam, Kozhikode, and 12 more districts in real-time.
                 </p>
 
@@ -320,32 +320,32 @@ export default function HomePage() {
 
             {/* Duolingo-Style Streak & Stats Ribbon */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-6">
-              <div className="p-6 rounded-[2rem] bg-white dark:bg-[#131F24] border-2 border-b-[6px] border-[#E5E5E5] dark:border-[#2A373F] flex items-center gap-4 shadow-lg">
+              <div className="p-6 rounded-[2rem] bg-white dark:bg-[#1f2e35] border-2 border-b-[6px] border-[#E5E5E5] dark:border-[#37464F] flex items-center gap-4 shadow-lg">
                 <div className="w-14 h-14 rounded-2xl bg-[#FFC800]/20 text-[#FFC800] flex items-center justify-center text-3xl font-black">
                   🔥
                 </div>
                 <div>
-                  <div className="text-2xl font-black text-[#171717] dark:text-white">14 Districts</div>
+                  <div className="text-2xl font-black text-[#131F24] dark:text-white">14 Districts</div>
                   <div className="text-xs font-black uppercase tracking-wider text-[#A5A5A5]">Kerala Wide Coverage</div>
                 </div>
               </div>
 
-              <div className="p-6 rounded-[2rem] bg-white dark:bg-[#131F24] border-2 border-b-[6px] border-[#E5E5E5] dark:border-[#2A373F] flex items-center gap-4 shadow-lg">
+              <div className="p-6 rounded-[2rem] bg-white dark:bg-[#1f2e35] border-2 border-b-[6px] border-[#E5E5E5] dark:border-[#37464F] flex items-center gap-4 shadow-lg">
                 <div className="w-14 h-14 rounded-2xl bg-[#58CC02]/20 text-[#58CC02] flex items-center justify-center text-3xl font-black">
                   ⚡
                 </div>
                 <div>
-                  <div className="text-2xl font-black text-[#171717] dark:text-white">100% Live DMs</div>
+                  <div className="text-2xl font-black text-[#131F24] dark:text-white">100% Live DMs</div>
                   <div className="text-xs font-black uppercase tracking-wider text-[#A5A5A5]">Direct Instagram Sync</div>
                 </div>
               </div>
 
-              <div className="p-6 rounded-[2rem] bg-white dark:bg-[#131F24] border-2 border-b-[6px] border-[#E5E5E5] dark:border-[#2A373F] flex items-center gap-4 shadow-lg">
+              <div className="p-6 rounded-[2rem] bg-white dark:bg-[#1f2e35] border-2 border-b-[6px] border-[#E5E5E5] dark:border-[#37464F] flex items-center gap-4 shadow-lg">
                 <div className="w-14 h-14 rounded-2xl bg-[#1CB0F6]/20 text-[#1CB0F6] flex items-center justify-center text-3xl font-black">
                   🏆
                 </div>
                 <div>
-                  <div className="text-2xl font-black text-[#171717] dark:text-white">{onboardedCount.toLocaleString()}+</div>
+                  <div className="text-2xl font-black text-[#131F24] dark:text-white">{onboardedCount.toLocaleString()}+</div>
                   <div className="text-xs font-black uppercase tracking-wider text-[#A5A5A5]">Active Athletes</div>
                 </div>
               </div>
@@ -354,7 +354,7 @@ export default function HomePage() {
             {/* Why Athletes Choose Us (Chunky Cards Grid) */}
             <div className="space-y-8 pt-8">
               <div className="text-center space-y-2">
-                <h2 className="text-3xl sm:text-4xl font-black text-[#171717] dark:text-white tracking-tight">
+                <h2 className="text-3xl sm:text-4xl font-black text-[#131F24] dark:text-white tracking-tight">
                   Why Athletes Love <span className="text-[#58CC02]">kalikkanaalundo.com</span>
                 </h2>
                 <p className="text-sm font-bold text-[#A5A5A5] max-w-md mx-auto">
@@ -363,14 +363,14 @@ export default function HomePage() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="p-8 rounded-[2.5rem] bg-white dark:bg-[#131F24] border-2 border-b-[8px] border-[#E5E5E5] dark:border-[#2A373F] shadow-xl space-y-4 hover:-translate-y-1.5 transition-all group">
+                <div className="p-8 rounded-[2.5rem] bg-white dark:bg-[#1f2e35] border-2 border-b-[8px] border-[#E5E5E5] dark:border-[#37464F] shadow-xl space-y-4 hover:-translate-y-1.5 transition-all group">
                   <div className="w-16 h-16 rounded-2xl bg-[#58CC02]/15 text-[#58CC02] flex items-center justify-center text-3xl group-hover:scale-110 transition-transform font-black">
                     🛰️
                   </div>
-                  <h3 className="text-xl font-black text-[#171717] dark:text-white tracking-tight">
+                  <h3 className="text-xl font-black text-[#131F24] dark:text-white tracking-tight">
                     Real-Time Fuzzed GPS
                   </h3>
-                  <p className="text-sm font-bold text-[#71717A] dark:text-[#A5A5A5] leading-relaxed">
+                  <p className="text-sm font-bold text-[#778B96] dark:text-[#A5A5A5] leading-relaxed">
                     Toggle live location sharing to find turf buddies within ~300 meters while keeping your exact address 100% private and protected.
                   </p>
                   <div className="pt-2 flex items-center gap-1.5 text-xs font-black text-[#58CC02]">
@@ -379,14 +379,14 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                <div className="p-8 rounded-[2.5rem] bg-white dark:bg-[#131F24] border-2 border-b-[8px] border-[#E5E5E5] dark:border-[#2A373F] shadow-xl space-y-4 hover:-translate-y-1.5 transition-all group">
+                <div className="p-8 rounded-[2.5rem] bg-white dark:bg-[#1f2e35] border-2 border-b-[8px] border-[#E5E5E5] dark:border-[#37464F] shadow-xl space-y-4 hover:-translate-y-1.5 transition-all group">
                   <div className="w-16 h-16 rounded-2xl bg-[#FF4B4B]/15 text-[#FF4B4B] flex items-center justify-center text-3xl group-hover:scale-110 transition-transform font-black">
                     💬
                   </div>
-                  <h3 className="text-xl font-black text-[#171717] dark:text-white tracking-tight">
+                  <h3 className="text-xl font-black text-[#131F24] dark:text-white tracking-tight">
                     One-Tap Instagram DMs
                   </h3>
-                  <p className="text-sm font-bold text-[#71717A] dark:text-[#A5A5A5] leading-relaxed">
+                  <p className="text-sm font-bold text-[#778B96] dark:text-[#A5A5A5] leading-relaxed">
                     Skip cumbersome friend requests. Connect instantly via integrated Instagram handles to schedule matches and assemble your squad.
                   </p>
                   <div className="pt-2 flex items-center gap-1.5 text-xs font-black text-[#FF4B4B]">
@@ -395,14 +395,14 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                <div className="p-8 rounded-[2.5rem] bg-white dark:bg-[#131F24] border-2 border-b-[8px] border-[#E5E5E5] dark:border-[#2A373F] shadow-xl space-y-4 hover:-translate-y-1.5 transition-all group">
+                <div className="p-8 rounded-[2.5rem] bg-white dark:bg-[#1f2e35] border-2 border-b-[8px] border-[#E5E5E5] dark:border-[#37464F] shadow-xl space-y-4 hover:-translate-y-1.5 transition-all group">
                   <div className="w-16 h-16 rounded-2xl bg-[#1CB0F6]/15 text-[#1CB0F6] flex items-center justify-center text-3xl group-hover:scale-110 transition-transform font-black">
                     🛡️
                   </div>
-                  <h3 className="text-xl font-black text-[#171717] dark:text-white tracking-tight">
+                  <h3 className="text-xl font-black text-[#131F24] dark:text-white tracking-tight">
                     Role-Based Hub Privacy
                   </h3>
-                  <p className="text-sm font-bold text-[#71717A] dark:text-[#A5A5A5] leading-relaxed">
+                  <p className="text-sm font-bold text-[#778B96] dark:text-[#A5A5A5] leading-relaxed">
                     Community creators gain access to full member registries and contact lists, while standard members stay protected with privacy-shielded counts.
                   </p>
                   <div className="pt-2 flex items-center gap-1.5 text-xs font-black text-[#1CB0F6]">
