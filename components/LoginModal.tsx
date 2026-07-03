@@ -177,6 +177,20 @@ export default function LoginModal({
             </div>
           </div>
         )}
+
+        {/* Build by Swalih */}
+        <div className="text-center pt-4 border-t border-[#E5E5E5] dark:border-[#2A373F] mt-4">
+          <a
+            href="https://www.linkedin.com/in/hafizswalih"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-[10px] font-bold text-[#A5A5A5] hover:text-[#58CC02] transition-colors"
+          >
+            <span>build by</span>
+            <span className="text-[#0A66C2] dark:text-[#0A66C2]">in/swalih</span>
+            <span>⚡</span>
+          </a>
+        </div>
       </div>
     </div>
   );
