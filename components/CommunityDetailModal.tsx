@@ -51,9 +51,12 @@ export default function CommunityDetailModal({
   );
 
   const openDirections = () => {
-    let lat = community.latitude || 10.0159;
-    let lng = community.longitude || 76.3419;
-    window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`, "_blank");
+    if (community.latitude && community.longitude && Math.abs(community.latitude - 10.0159) > 0.001) {
+      window.open(`https://www.google.com/maps/dir/?api=1&destination=${community.latitude},${community.longitude}`, "_blank");
+    } else {
+      const query = encodeURIComponent(`${community.name}, ${community.district}, Kerala`);
+      window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, "_blank");
+    }
   };
 
   return (

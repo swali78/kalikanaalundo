@@ -122,9 +122,14 @@ export default function DiscoverView({
 
   const openDirections = (e: React.MouseEvent, game: Game) => {
     e.stopPropagation();
-    let lat = game.latitude || 10.0159;
-    let lng = game.longitude || 76.3419;
-    window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`, "_blank");
+    // If exact GPS coordinates are available and not default fallback, navigate to coordinates
+    if (game.latitude && game.longitude && Math.abs(game.latitude - 10.0159) > 0.001) {
+      window.open(`https://www.google.com/maps/dir/?api=1&destination=${game.latitude},${game.longitude}`, "_blank");
+    } else {
+      // Otherwise intelligently search Google Maps for venue name + district
+      const query = encodeURIComponent(`${game.venue}, ${game.district}, Kerala`);
+      window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, "_blank");
+    }
   };
 
   const isPlayerJoined = (game: Game) => {

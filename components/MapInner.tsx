@@ -67,8 +67,15 @@ export default function MapInner({
   const centerLat = userLat || 10.0159;
   const centerLng = userLng || 76.3419;
 
-  const openDirections = (lat: number, lng: number) => {
-    window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`, "_blank");
+  const openDirections = (lat: number, lng: number, title?: string, district?: string) => {
+    if (Math.abs(lat - 10.0159) > 0.001) {
+      window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`, "_blank");
+    } else if (title) {
+      const query = encodeURIComponent(`${title}, ${district || 'Kerala'}, Kerala`);
+      window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, "_blank");
+    } else {
+      window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`, "_blank");
+    }
   };
 
   return (
@@ -151,7 +158,7 @@ export default function MapInner({
                       Join Game
                     </button>
                     <button
-                      onClick={() => openDirections(lat!, lng!)}
+                      onClick={() => openDirections(lat!, lng!, game.venue, game.district)}
                       title="Get Directions in Google Maps"
                       className="py-1.5 px-2.5 rounded-xl bg-[#F4F4F5] hover:bg-[#E4E4E7] text-[#171717] text-xs font-semibold flex items-center gap-1 transition-colors"
                     >
@@ -210,7 +217,7 @@ export default function MapInner({
                       View Hub
                     </button>
                     <button
-                      onClick={() => openDirections(lat!, lng!)}
+                      onClick={() => openDirections(lat!, lng!, comm.name, comm.district)}
                       title="Get Directions in Google Maps"
                       className="py-1.5 px-2.5 rounded-xl bg-[#F4F4F5] hover:bg-[#E4E4E7] text-[#171717] text-xs font-semibold flex items-center gap-1 transition-colors"
                     >

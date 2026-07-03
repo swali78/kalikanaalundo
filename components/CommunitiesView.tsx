@@ -18,9 +18,12 @@ export default function CommunitiesView({
 }: CommunitiesViewProps) {
   const openDirections = (e: React.MouseEvent, comm: Community) => {
     e.stopPropagation();
-    let lat = comm.latitude || 10.0159;
-    let lng = comm.longitude || 76.3419;
-    window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`, "_blank");
+    if (comm.latitude && comm.longitude && Math.abs(comm.latitude - 10.0159) > 0.001) {
+      window.open(`https://www.google.com/maps/dir/?api=1&destination=${comm.latitude},${comm.longitude}`, "_blank");
+    } else {
+      const query = encodeURIComponent(`${comm.name}, ${comm.district}, Kerala`);
+      window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, "_blank");
+    }
   };
 
   return (

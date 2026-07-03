@@ -40,9 +40,12 @@ export default function MyGamesView({
 
   const openDirections = (e: React.MouseEvent, game: Game) => {
     e.stopPropagation();
-    let lat = game.latitude || 10.0159;
-    let lng = game.longitude || 76.3419;
-    window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`, "_blank");
+    if (game.latitude && game.longitude && Math.abs(game.latitude - 10.0159) > 0.001) {
+      window.open(`https://www.google.com/maps/dir/?api=1&destination=${game.latitude},${game.longitude}`, "_blank");
+    } else {
+      const query = encodeURIComponent(`${game.venue}, ${game.district}, Kerala`);
+      window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, "_blank");
+    }
   };
 
   return (
