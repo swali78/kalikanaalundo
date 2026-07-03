@@ -82,6 +82,7 @@ function mapProfileToUser(profile: any): AppUser {
     longitude: profile.lng || profile.longitude || undefined,
     instagram: profile.instagram || undefined,
     privacyFuzzLocation: profile.privacy_fuzz_location ?? true,
+    role: profile.role || 'player',
   };
 }
 
@@ -482,7 +483,13 @@ export function subscribeToMessages(gameId: string, onMessage: (msg: Message) =>
 export async function signInWithEmail(email: string) {
   if (!supabase) return { error: 'Supabase not configured' };
 
-  const { error } = await supabase.auth.signInWithOtp({ email, options: { shouldCreateUser: true } });
+  const { error } = await supabase.auth.signInWithOtp({
+    email,
+    options: {
+      emailRedirectTo: typeof window !== 'undefined' ? `${window.location.origin}/auth/callback` : undefined,
+      shouldCreateUser: true,
+    },
+  });
   return { error };
 }
 
@@ -532,6 +539,7 @@ export async function updateProfile(updates: Partial<AppUser & { latitude?: numb
     lat: updates.latitude,
     lng: updates.longitude,
     privacy_fuzz_location: updates.privacyFuzzLocation,
+    role: updates.role,
   };
 
   // Remove undefined

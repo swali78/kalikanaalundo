@@ -28,6 +28,7 @@ export interface User {
   longitude?: number;
   instagram?: string;
   privacyFuzzLocation?: boolean;
+  role?: 'player' | 'admin';
 }
 
 export interface Game {

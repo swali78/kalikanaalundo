@@ -20,6 +20,7 @@ interface OnboardingModalProps {
     privacyFuzzLocation?: boolean;
     latitude?: number;
     longitude?: number;
+    role?: 'player' | 'admin';
   }) => void;
   initialName?: string;
 }
@@ -58,6 +59,7 @@ export default function OnboardingModal({
 }: OnboardingModalProps) {
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [name, setName] = useState(initialName || "");
+  const [role, setRole] = useState<'player' | 'admin'>('player');
   const [age, setAge] = useState<number>(24);
   const [district, setDistrict] = useState<District>("Ernakulam");
   const [city, setCity] = useState("Kochi");
@@ -124,6 +126,7 @@ export default function OnboardingModal({
       privacyFuzzLocation,
       latitude: coords.lat,
       longitude: coords.lng,
+      role,
     });
   };
 
@@ -173,6 +176,48 @@ export default function OnboardingModal({
                   onChange={(e) => setName(e.target.value)}
                   className="w-full font-medium"
                 />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-[#71717A] mb-1.5">
+                  Your Primary Role on Circle
+                </label>
+                <div className="grid grid-cols-2 gap-2.5">
+                  <button
+                    type="button"
+                    onClick={() => setRole("player")}
+                    className={`p-3 rounded-2xl border text-left transition-all flex flex-col justify-between ${
+                      role === "player"
+                        ? "border-[#22C55E] bg-[#22C55E]/10 text-[#171717] dark:text-white font-bold shadow-sm"
+                        : "border-[#E4E4E7] dark:border-[#262626] hover:border-[#71717A] text-[#71717A]"
+                    }`}
+                  >
+                    <span className="text-sm font-bold flex items-center gap-1.5">
+                      <span>⚽</span>
+                      <span>Normal Player</span>
+                    </span>
+                    <span className="text-[10px] mt-1 opacity-80 leading-snug font-normal">
+                      Discover games & join turfs
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setRole("admin")}
+                    className={`p-3 rounded-2xl border text-left transition-all flex flex-col justify-between ${
+                      role === "admin"
+                        ? "border-[#22C55E] bg-[#22C55E]/10 text-[#171717] dark:text-white font-bold shadow-sm"
+                        : "border-[#E4E4E7] dark:border-[#262626] hover:border-[#71717A] text-[#71717A]"
+                    }`}
+                  >
+                    <span className="text-sm font-bold flex items-center gap-1.5">
+                      <span>🛡️</span>
+                      <span>Community Host</span>
+                    </span>
+                    <span className="text-[10px] mt-1 opacity-80 leading-snug font-normal">
+                      Organize hubs & turfs
+                    </span>
+                  </button>
+                </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">

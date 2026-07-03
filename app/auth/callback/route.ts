@@ -8,9 +8,13 @@ export async function GET(request: Request) {
   const errorDescription = requestUrl.searchParams.get('error_description');
   const next = requestUrl.searchParams.get('next') || '/';
 
+  // Determine true public origin behind Vercel / reverse proxy
+  const forwardedHost = request.headers.get('x-forwarded-host');
+  const origin = forwardedHost ? `https://${forwardedHost}` : requestUrl.origin;
+
   if (error) {
     console.error('OAuth provider error:', error, errorDescription);
-    const redirectUrl = new URL('/', requestUrl.origin);
+    const redirectUrl = new URL('/', origin);
     redirectUrl.searchParams.set('auth_error', 'google');
     return NextResponse.redirect(redirectUrl);
   }
@@ -23,10 +27,10 @@ export async function GET(request: Request) {
 
       if (!exchangeError) {
         // Success: cookies set, session ready
-        return NextResponse.redirect(new URL(next, requestUrl.origin));
+        return NextResponse.redirect(new URL(next, origin));
       }
 
-      // Only log real unexpected errors (PKCE verifier missing is normal for manual/test URLs)
+      // Only log real unexpected errors
       if (!exchangeError.message?.includes('PKCE') && !exchangeError.message?.includes('verifier')) {
         console.error('Auth callback exchange error:', exchangeError);
       }
@@ -34,7 +38,7 @@ export async function GET(request: Request) {
   }
 
   // Fallback: signal error to the app
-  const redirectUrl = new URL('/', requestUrl.origin);
+  const redirectUrl = new URL('/', origin);
   redirectUrl.searchParams.set('auth_error', 'google');
   return NextResponse.redirect(redirectUrl);
 }

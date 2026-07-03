@@ -156,6 +156,7 @@ export default function HomePage() {
     privacyFuzzLocation?: boolean;
     latitude?: number;
     longitude?: number;
+    role?: 'player' | 'admin';
   }) => {
     const updatedUser: User = {
       id: currentUser?.id || `user-${Date.now()}`,
@@ -169,6 +170,7 @@ export default function HomePage() {
       privacyFuzzLocation: data.privacyFuzzLocation,
       latitude: data.latitude,
       longitude: data.longitude,
+      role: data.role,
       avatar: currentUser?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(data.name)}&background=22C55E&color=fff`,
       availability: ["Evening", "Weekends"],
       rating: 5.0,
@@ -220,22 +222,6 @@ export default function HomePage() {
     setUserLng(demoUser.longitude);
     setIsGpsActive(true);
     setShowLogin(false);
-  };
-
-  const handleCleanDemoData = async () => {
-    if (!confirm("Are you sure you want to clean up all placeholder/demo data?")) return;
-    const res = await wipeAllDemoData();
-    if (res.success) {
-      alert(`Cleaned up all demo data! Refreshing live database feed...`);
-      const [updatedGames, updatedComms] = await Promise.all([
-        fetchGames(),
-        fetchCommunities(),
-      ]);
-      setGames(updatedGames || []);
-      setCommunities(updatedComms || []);
-    } else {
-      alert("Could not delete demo data. Make sure you have RLS delete permissions.");
-    }
   };
 
   return (
@@ -514,14 +500,6 @@ export default function HomePage() {
           </div>
 
           <div className="flex items-center gap-4">
-            <button
-              onClick={handleCleanDemoData}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#EF4444]/10 hover:bg-[#EF4444]/20 text-[#EF4444] transition-colors font-bold"
-              title="Delete all placeholder/demo data as requested"
-            >
-              <Trash2 className="w-3.5 h-3.5" />
-              <span>Purge All Mock/Demo Data</span>
-            </button>
             <button
               onClick={() => setShowOnboarding(true)}
               className="hover:text-[#171717] dark:hover:text-white transition-colors"
