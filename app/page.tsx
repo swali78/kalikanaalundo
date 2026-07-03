@@ -503,13 +503,25 @@ export default function HomePage() {
             </div>
             <span>© 2026 kalikkanaalundo.com — Kerala's Sports Network</span>
           </div>
-          <button
-            onClick={loadData}
-            className="flex items-center gap-1 hover:text-[#171717] dark:hover:text-white transition-colors"
-          >
-            <RefreshCw className="w-3.5 h-3.5" />
-            <span>Refresh</span>
-          </button>
+          <div className="flex items-center gap-3">
+            <a
+              href="https://www.linkedin.com/in/hafizswalih"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-[10px] font-bold text-[#A5A5A5] hover:text-[#58CC02] transition-colors"
+            >
+              <span>build by</span>
+              <span className="text-[#0A66C2]">in/swalih</span>
+              <span>⚡</span>
+            </a>
+            <button
+              onClick={loadData}
+              className="flex items-center gap-1 hover:text-[#171717] dark:hover:text-white transition-colors"
+            >
+              <RefreshCw className="w-3.5 h-3.5" />
+              <span>Refresh</span>
+            </button>
+          </div>
         </div>
       </footer>
 
