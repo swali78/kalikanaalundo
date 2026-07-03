@@ -36,6 +36,16 @@ const AVAILABLE_SPORTS: Sport[] = [
   "Table Tennis",
   "Running",
   "Cycling",
+  "Swimming",
+  "Yoga",
+  "Dancing",
+  "Boxing",
+  "Martial Arts",
+  "Gym",
+  "Athletics",
+  "Skating",
+  "Chess",
+  "Kabaddi",
 ];
 
 const DISTRICTS: District[] = [
@@ -134,22 +144,16 @@ export default function OnboardingModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm fade-in">
       <div className="glass-modal w-full max-w-lg p-6 sm:p-8 bg-white dark:bg-[#121212] relative max-h-[90vh] overflow-y-auto">
         {/* Step indicator */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-[#22C55E]/15 text-[#22C55E] flex items-center justify-center font-bold text-sm">
-              {step}
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-full bg-[#22C55E]/15 text-[#22C55E] flex items-center justify-center font-bold text-sm">
+                {step}
+              </div>
+              <span className="text-xs font-semibold uppercase tracking-wider text-[#71717A]">
+                Step {step} of 3
+              </span>
             </div>
-            <span className="text-xs font-semibold uppercase tracking-wider text-[#71717A]">
-              Step {step} of 3
-            </span>
           </div>
-          <button
-            onClick={onClose}
-            className="text-sm text-[#71717A] hover:text-[#171717] dark:hover:text-white"
-          >
-            Skip for now
-          </button>
-        </div>
 
         <form onSubmit={handleSubmit}>
           {/* STEP 1: Basic Info */}

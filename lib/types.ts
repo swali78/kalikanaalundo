@@ -1,6 +1,8 @@
 export type Sport = 
   | 'Badminton' | 'Football' | 'Cricket' | 'Volleyball' | 'Basketball' 
-  | 'Tennis' | 'Pickleball' | 'Table Tennis' | 'Running' | 'Cycling';
+  | 'Tennis' | 'Pickleball' | 'Table Tennis' | 'Running' | 'Cycling'
+  | 'Swimming' | 'Yoga' | 'Dancing' | 'Boxing' | 'Martial Arts'
+  | 'Gym' | 'Athletics' | 'Skating' | 'Chess' | 'Kabaddi';
 
 export type SkillLevel = 'Beginner' | 'Intermediate' | 'Advanced';
 

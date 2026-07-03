@@ -24,6 +24,7 @@ import HostGameModal from "@/components/HostGameModal";
 import PlayNowModal from "@/components/PlayNowModal";
 import ChatModal from "@/components/ChatModal";
 import CommunityDetailModal from "@/components/CommunityDetailModal";
+import ProfileUpdatePrompt from "@/components/ProfileUpdatePrompt";
 import PlayerEmote from "@/components/ui/PlayerEmote";
 import { Sparkles, Trash2, ShieldCheck, MapPin, RefreshCw, Trophy, Users, ArrowRight, CheckCircle2 } from "lucide-react";
 
@@ -48,6 +49,8 @@ export default function HomePage() {
   const [activeChatGame, setActiveChatGame] = useState<Game | null>(null);
   const [activeCommunityDetail, setActiveCommunityDetail] = useState<Community | null>(null);
 
+  const [showProfileUpdatePrompt, setShowProfileUpdatePrompt] = useState<boolean>(false);
+
   const loadData = useCallback(async () => {
     setLoading(true);
     try {
@@ -68,6 +71,14 @@ export default function HomePage() {
       setGames(gamesList || []);
       setCommunities(commsList || []);
       setOnboardedCount(count);
+
+      // Auto-trigger onboarding for new users (no sports selected = fresh signup)
+      if (user && (!user.sports || user.sports.length === 0 || !user.city)) {
+        setShowOnboarding(true);
+      } else if (user && !localStorage.getItem('profile_update_shown')) {
+        // One-time profile update prompt for existing users
+        setShowProfileUpdatePrompt(true);
+      }
     } catch (err) {
       console.warn("Error loading initial data:", err);
       setGames([]);
@@ -242,37 +253,50 @@ export default function HomePage() {
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6">
         {loading ? (
           <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
-            <div className="w-16 h-16 rounded-3xl bg-[#10B981]/20 flex items-center justify-center text-3xl font-bold text-[#10B981] animate-bounce border border-[#10B981]/30">
-              K
+            <div className="relative">
+              <div className="w-20 h-20 rounded-3xl bg-white dark:bg-[#1f2e35] shadow-2xl border-2 border-[#E5E5E5] dark:border-[#37464F] p-2 flex items-center justify-center overflow-hidden animate-bounce">
+                <img src="/logo.png" alt="kalikkanaalundo.com" className="w-full h-full object-contain animate-spin-slow" />
+              </div>
+              <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-[#58CC02] border-2 border-white dark:border-[#131F24] flex items-center justify-center">
+                <span className="text-white text-[10px] font-black animate-pulse">⚡</span>
+              </div>
             </div>
             <p className="text-sm font-semibold text-[#71717A] animate-pulse">
               Connecting to kalikkanaalundo.com Live Network...
             </p>
           </div>
         ) : !currentUser ? (
-          /* ================= DUOLINGO-STYLE UNAUTHENTICATED HERO & PORTAL ================= */
-          <div className="space-y-16 py-8 sm:py-12 fade-in max-w-6xl mx-auto">
+          /* ================= DUOLINGO-STYLE UNAUTHENTICATED HERO ================= */
+          <div className="space-y-12 py-6 sm:py-10 fade-in max-w-6xl mx-auto">
             {/* Split Hero Layout */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center min-h-[70vh]">
-              {/* Left Column: Interactive Mascot & Organized Standard Sports Grid */}
-              <div className="lg:col-span-6 flex flex-col items-center justify-center py-6 space-y-6">
-                {/* Central Mascot */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center min-h-[65vh]">
+              {/* Left Column: Interactive Mascot & Sports Badges */}
+              <div className="lg:col-span-6 flex flex-col items-center justify-center py-4 space-y-6">
+                {/* Brand Logo */}
+                <div className="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-[#58CC02]/15 border-2 border-[#58CC02]/30 text-xs font-black uppercase tracking-widest text-[#58CC02]">
+                  <div className="w-5 h-5 rounded-md overflow-hidden shrink-0">
+                    <img src="/logo.png" alt="kalikkanaalundo.com logo" className="w-full h-full object-contain" />
+                  </div>
+                  <span>KERALA'S #1 TURF SPORTS NETWORK</span>
+                </div>
+
+                {/* Large Interactive Mascot */}
                 <div className="flex justify-center">
                   <PlayerEmote state="playing" size="xl" message="കളിക്കാനാളട്ടുണ്ടോ? Let's jump onto the turf!" />
                 </div>
 
-                {/* Organized Standard Sports & Location Badges */}
-                <div className="grid grid-cols-2 gap-3 w-full max-w-sm pt-2">
-                  <div className="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-white dark:bg-[#1f2e35] border-2 border-b-[4px] border-[#E5E5E5] dark:border-[#37464F] shadow-sm text-xs font-black text-[#58CC02]">
+                {/* Sports & Location Badges */}
+                <div className="grid grid-cols-2 gap-3 w-full max-w-sm">
+                  <div className="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-white dark:bg-[#131F24] border-2 border-b-4 border-[#E5E5E5] dark:border-[#37464F] shadow-sm text-xs font-black text-[#58CC02]">
                     <span>🏸 BADMINTON</span>
                   </div>
-                  <div className="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-white dark:bg-[#1f2e35] border-2 border-b-[4px] border-[#E5E5E5] dark:border-[#37464F] shadow-sm text-xs font-black text-[#1CB0F6]">
+                  <div className="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-white dark:bg-[#131F24] border-2 border-b-4 border-[#E5E5E5] dark:border-[#37464F] shadow-sm text-xs font-black text-[#1CB0F6]">
                     <span>⚽ FOOTBALL 5V5</span>
                   </div>
-                  <div className="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-white dark:bg-[#1f2e35] border-2 border-b-[4px] border-[#E5E5E5] dark:border-[#37464F] shadow-sm text-xs font-black text-[#FF4B4B]">
+                  <div className="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-white dark:bg-[#131F24] border-2 border-b-4 border-[#E5E5E5] dark:border-[#37464F] shadow-sm text-xs font-black text-[#FF4B4B]">
                     <span>📍 ERNAKULAM TURF</span>
                   </div>
-                  <div className="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-white dark:bg-[#1f2e35] border-2 border-b-[4px] border-[#E5E5E5] dark:border-[#37464F] shadow-sm text-xs font-black text-[#FFC800]">
+                  <div className="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-white dark:bg-[#131F24] border-2 border-b-4 border-[#E5E5E5] dark:border-[#37464F] shadow-sm text-xs font-black text-[#FFC800]">
                     <span>🏏 CRICKET BOX</span>
                   </div>
                 </div>
@@ -282,35 +306,42 @@ export default function HomePage() {
                 </p>
               </div>
 
-              {/* Right Column: Headline & Duolingo Chunky Actions */}
-              <div className="lg:col-span-6 space-y-8 text-center lg:text-left px-2 sm:px-6">
-                <div className="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-[#58CC02]/15 border-2 border-[#58CC02]/30 text-xs font-black uppercase tracking-widest text-[#58CC02]">
-                  <div className="w-5 h-5 rounded-md overflow-hidden shrink-0">
-                    <img src="/logo.png" alt="kalikkanaalundo.com logo" className="w-full h-full object-contain" />
-                  </div>
-                  <span>KERALA'S #1 TURF SPORTS NETWORK</span>
-                </div>
-
-                <h1 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight text-[#131F24] dark:text-white leading-[1.15]">
+              {/* Right Column: Headline, CTA, & Stats */}
+              <div className="lg:col-span-6 space-y-6 text-center lg:text-left px-2">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-[#171717] dark:text-white leading-[1.15]">
                   The free, fun, and <span className="text-[#58CC02] underline decoration-wavy decoration-[#58CC02]/40">real-time</span> way to find turf players!
                 </h1>
 
-                <p className="text-base sm:text-lg text-[#778B96] dark:text-[#A5A5A5] font-bold max-w-xl mx-auto lg:mx-0 leading-relaxed">
+                <p className="text-base sm:text-lg text-[#71717A] dark:text-[#A5A5A5] font-bold max-w-xl leading-relaxed">
                   Never miss a match because your squad was one player short. Discover verified athletes across Ernakulam, Kozhikode, and 12 more districts in real-time.
                 </p>
 
-                {/* Chunky Stacked Action Buttons */}
-                <div className="space-y-4 pt-2 max-w-md mx-auto lg:mx-0">
+                {/* Players Onboarded Counter */}
+                <div className="inline-flex items-center gap-3 px-5 py-3 rounded-2xl bg-[#58CC02]/10 dark:bg-[#58CC02]/15 border-2 border-[#58CC02]/30">
+                  <div className="flex -space-x-2">
+                    {[1,2,3].map((i) => (
+                      <div key={i} className="w-8 h-8 rounded-full bg-[#58CC02]/30 border-2 border-white dark:border-[#131F24] flex items-center justify-center text-xs font-black text-[#58CC02]">
+                        {['👤','🏃','⚽'][i-1]}
+                      </div>
+                    ))}
+                  </div>
+                  <div className="text-left">
+                    <span className="text-xl font-black text-[#58CC02]">{onboardedCount.toLocaleString()}+</span>
+                    <span className="text-xs font-bold text-[#71717A] dark:text-[#A5B2BA] block leading-tight">PLAYERS ONBOARDED</span>
+                  </div>
+                </div>
+
+                {/* CTA Buttons */}
+                <div className="space-y-3 pt-2 max-w-md">
                   <button
                     onClick={() => setShowLogin(true)}
                     className="w-full duo-btn-green text-base sm:text-lg !py-4 shadow-xl"
                   >
                     <span>GET STARTED 🚀</span>
                   </button>
-
                   <button
                     onClick={() => setShowLogin(true)}
-                    className="w-full duo-btn-outline text-base sm:text-lg !py-4 shadow-xl"
+                    className="w-full duo-btn-outline text-base sm:text-lg !py-4"
                   >
                     <span>I ALREADY HAVE AN ACCOUNT</span>
                   </button>
@@ -318,117 +349,91 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Duolingo-Style Streak & Stats Ribbon */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-6">
-              <div className="p-6 rounded-[2rem] bg-white dark:bg-[#1f2e35] border-2 border-b-[6px] border-[#E5E5E5] dark:border-[#37464F] flex items-center gap-4 shadow-lg">
-                <div className="w-14 h-14 rounded-2xl bg-[#FFC800]/20 text-[#FFC800] flex items-center justify-center text-3xl font-black">
-                  🔥
-                </div>
-                <div>
-                  <div className="text-2xl font-black text-[#131F24] dark:text-white">14 Districts</div>
-                  <div className="text-xs font-black uppercase tracking-wider text-[#A5A5A5]">Kerala Wide Coverage</div>
-                </div>
+            {/* Stats Counter Strips */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+              <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#1f2e35] border-2 border-b-[5px] border-[#E5E5E5] dark:border-[#37464F] text-center space-y-1 shadow-lg hover:-translate-y-1 transition-all">
+                <span className="text-2xl sm:text-3xl font-black text-[#FFC800]">14</span>
+                <span className="text-[10px] font-black uppercase tracking-wider text-[#A5A5A5] block">Districts</span>
               </div>
-
-              <div className="p-6 rounded-[2rem] bg-white dark:bg-[#1f2e35] border-2 border-b-[6px] border-[#E5E5E5] dark:border-[#37464F] flex items-center gap-4 shadow-lg">
-                <div className="w-14 h-14 rounded-2xl bg-[#58CC02]/20 text-[#58CC02] flex items-center justify-center text-3xl font-black">
-                  ⚡
-                </div>
-                <div>
-                  <div className="text-2xl font-black text-[#131F24] dark:text-white">100% Live DMs</div>
-                  <div className="text-xs font-black uppercase tracking-wider text-[#A5A5A5]">Direct Instagram Sync</div>
-                </div>
+              <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#1f2e35] border-2 border-b-[5px] border-[#E5E5E5] dark:border-[#37464F] text-center space-y-1 shadow-lg hover:-translate-y-1 transition-all">
+                <span className="text-2xl sm:text-3xl font-black text-[#58CC02]">{onboardedCount.toLocaleString()}+</span>
+                <span className="text-[10px] font-black uppercase tracking-wider text-[#A5A5A5] block">Athletes</span>
               </div>
+              <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#1f2e35] border-2 border-b-[5px] border-[#E5E5E5] dark:border-[#37464F] text-center space-y-1 shadow-lg hover:-translate-y-1 transition-all">
+                <span className="text-2xl sm:text-3xl font-black text-[#1CB0F6]">100%</span>
+                <span className="text-[10px] font-black uppercase tracking-wider text-[#A5A5A5] block">Live DMs</span>
+              </div>
+              <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#1f2e35] border-2 border-b-[5px] border-[#E5E5E5] dark:border-[#37464F] text-center space-y-1 shadow-lg hover:-translate-y-1 transition-all">
+                <span className="text-2xl sm:text-3xl font-black text-[#FF4B4B]">20+</span>
+                <span className="text-[10px] font-black uppercase tracking-wider text-[#A5A5A5] block">Sports</span>
+              </div>
+            </div>
 
-              <div className="p-6 rounded-[2rem] bg-white dark:bg-[#1f2e35] border-2 border-b-[6px] border-[#E5E5E5] dark:border-[#37464F] flex items-center gap-4 shadow-lg">
-                <div className="w-14 h-14 rounded-2xl bg-[#1CB0F6]/20 text-[#1CB0F6] flex items-center justify-center text-3xl font-black">
-                  🏆
+            {/* Featured Sports Grid with Bat Theme */}
+            <div className="relative overflow-hidden rounded-[2.5rem] bg-white dark:bg-[#1f2e35] border-2 border-b-[6px] border-[#E5E5E5] dark:border-[#37464F] shadow-xl p-6 sm:p-10 bat-pattern">
+              <div className="relative z-10">
+                <div className="text-center space-y-1 mb-6">
+                  <h2 className="text-2xl sm:text-3xl font-black text-[#131F24] dark:text-white tracking-tight">
+                    🏏 Play <span className="text-[#58CC02]">Every</span> Sport
+                  </h2>
+                  <p className="text-xs font-bold text-[#A5A5A5]">From cricket to dancing — find your squad</p>
                 </div>
-                <div>
-                  <div className="text-2xl font-black text-[#131F24] dark:text-white">{onboardedCount.toLocaleString()}+</div>
-                  <div className="text-xs font-black uppercase tracking-wider text-[#A5A5A5]">Active Athletes</div>
+                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2 sm:gap-3">
+                  {["Badminton","Football","Cricket","Volleyball","Basketball","Tennis","Pickleball","Running","Swimming","Yoga","Dancing","Boxing","Martial Arts","Gym","Chess","Kabaddi","Skating","Table Tennis","Cycling","Athletics"].map((sport) => (
+                    <div key={sport} className="flex flex-col items-center gap-1 p-2 sm:p-3 rounded-2xl bg-[#F4F4F5] dark:bg-[#283941] border border-[#E5E5E5] dark:border-[#37464F] hover:bg-[#58CC02]/10 hover:border-[#58CC02]/30 transition-all group cursor-default">
+                      <span className="text-xl sm:text-2xl group-hover:scale-110 transition-transform">
+                        {(() => {
+                          const emojis: Record<string,string> = {Badminton:'🏸',Football:'⚽',Cricket:'🏏',Volleyball:'🏐',Basketball:'🏀',Tennis:'🎾',Pickleball:'🏓','Table Tennis':'🏓',Running:'🏃',Cycling:'🚴',Swimming:'🏊',Yoga:'🧘',Dancing:'💃',Boxing:'🥊','Martial Arts':'🥋',Gym:'🏋️',Athletics:'🏃‍➡️',Skating:'⛸️',Chess:'♟️',Kabaddi:'🤼'};
+                          return emojis[sport] || '🏅';
+                        })()}
+                      </span>
+                      <span className="text-[9px] sm:text-[10px] font-black text-[#71717A] dark:text-[#A5B2BA] text-center leading-tight">{sport}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
 
-            {/* Why Athletes Choose Us (Chunky Cards Grid) */}
-            <div className="space-y-8 pt-8">
-              <div className="text-center space-y-2">
-                <h2 className="text-3xl sm:text-4xl font-black text-[#131F24] dark:text-white tracking-tight">
+            {/* Why Athletes Love Us */}
+            <div className="space-y-6">
+              <div className="text-center space-y-1">
+                <h2 className="text-2xl sm:text-3xl font-black text-[#131F24] dark:text-white tracking-tight">
                   Why Athletes Love <span className="text-[#58CC02]">kalikkanaalundo.com</span>
                 </h2>
-                <p className="text-sm font-bold text-[#A5A5A5] max-w-md mx-auto">
-                  Gamified networking, instant squad formation, and strict location privacy.
-                </p>
+                <p className="text-xs font-bold text-[#A5A5A5]">Gamified networking, instant squad formation, strict location privacy</p>
               </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="p-8 rounded-[2.5rem] bg-white dark:bg-[#1f2e35] border-2 border-b-[8px] border-[#E5E5E5] dark:border-[#37464F] shadow-xl space-y-4 hover:-translate-y-1.5 transition-all group">
-                  <div className="w-16 h-16 rounded-2xl bg-[#58CC02]/15 text-[#58CC02] flex items-center justify-center text-3xl group-hover:scale-110 transition-transform font-black">
-                    🛰️
-                  </div>
-                  <h3 className="text-xl font-black text-[#131F24] dark:text-white tracking-tight">
-                    Real-Time Fuzzed GPS
-                  </h3>
-                  <p className="text-sm font-bold text-[#778B96] dark:text-[#A5A5A5] leading-relaxed">
-                    Toggle live location sharing to find turf buddies within ~300 meters while keeping your exact address 100% private and protected.
-                  </p>
-                  <div className="pt-2 flex items-center gap-1.5 text-xs font-black text-[#58CC02]">
-                    <CheckCircle2 className="w-4 h-4" />
-                    <span>~300M FUZZED RADIUS</span>
-                  </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="p-6 rounded-[2rem] bg-white dark:bg-[#1f2e35] border-2 border-b-[6px] border-[#E5E5E5] dark:border-[#37464F] shadow-lg space-y-3 hover:-translate-y-1 transition-all group">
+                  <div className="w-12 h-12 rounded-2xl bg-[#58CC02]/15 text-[#58CC02] flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">🛰️</div>
+                  <h3 className="text-base font-black text-[#131F24] dark:text-white">Fuzzed GPS Privacy</h3>
+                  <p className="text-xs font-bold text-[#778B96] dark:text-[#A5A5A5] leading-relaxed">Find turf buddies within ~300m while keeping your exact address private.</p>
                 </div>
-
-                <div className="p-8 rounded-[2.5rem] bg-white dark:bg-[#1f2e35] border-2 border-b-[8px] border-[#E5E5E5] dark:border-[#37464F] shadow-xl space-y-4 hover:-translate-y-1.5 transition-all group">
-                  <div className="w-16 h-16 rounded-2xl bg-[#FF4B4B]/15 text-[#FF4B4B] flex items-center justify-center text-3xl group-hover:scale-110 transition-transform font-black">
-                    💬
-                  </div>
-                  <h3 className="text-xl font-black text-[#131F24] dark:text-white tracking-tight">
-                    One-Tap Instagram DMs
-                  </h3>
-                  <p className="text-sm font-bold text-[#778B96] dark:text-[#A5A5A5] leading-relaxed">
-                    Skip cumbersome friend requests. Connect instantly via integrated Instagram handles to schedule matches and assemble your squad.
-                  </p>
-                  <div className="pt-2 flex items-center gap-1.5 text-xs font-black text-[#FF4B4B]">
-                    <CheckCircle2 className="w-4 h-4" />
-                    <span>DIRECT IG SYNC</span>
-                  </div>
+                <div className="p-6 rounded-[2rem] bg-white dark:bg-[#1f2e35] border-2 border-b-[6px] border-[#E5E5E5] dark:border-[#37464F] shadow-lg space-y-3 hover:-translate-y-1 transition-all group">
+                  <div className="w-12 h-12 rounded-2xl bg-[#FF4B4B]/15 text-[#FF4B4B] flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">💬</div>
+                  <h3 className="text-base font-black text-[#131F24] dark:text-white">One-Tap Instagram DM</h3>
+                  <p className="text-xs font-bold text-[#778B96] dark:text-[#A5A5A5] leading-relaxed">Skip friend requests. Connect instantly via IG handles to schedule matches.</p>
                 </div>
-
-                <div className="p-8 rounded-[2.5rem] bg-white dark:bg-[#1f2e35] border-2 border-b-[8px] border-[#E5E5E5] dark:border-[#37464F] shadow-xl space-y-4 hover:-translate-y-1.5 transition-all group">
-                  <div className="w-16 h-16 rounded-2xl bg-[#1CB0F6]/15 text-[#1CB0F6] flex items-center justify-center text-3xl group-hover:scale-110 transition-transform font-black">
-                    🛡️
-                  </div>
-                  <h3 className="text-xl font-black text-[#131F24] dark:text-white tracking-tight">
-                    Role-Based Hub Privacy
-                  </h3>
-                  <p className="text-sm font-bold text-[#778B96] dark:text-[#A5A5A5] leading-relaxed">
-                    Community creators gain access to full member registries and contact lists, while standard members stay protected with privacy-shielded counts.
-                  </p>
-                  <div className="pt-2 flex items-center gap-1.5 text-xs font-black text-[#1CB0F6]">
-                    <CheckCircle2 className="w-4 h-4" />
-                    <span>CREATOR ADMIN PORTAL</span>
-                  </div>
+                <div className="p-6 rounded-[2rem] bg-white dark:bg-[#1f2e35] border-2 border-b-[6px] border-[#E5E5E5] dark:border-[#37464F] shadow-lg space-y-3 hover:-translate-y-1 transition-all group">
+                  <div className="w-12 h-12 rounded-2xl bg-[#1CB0F6]/15 text-[#1CB0F6] flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">🛡️</div>
+                  <h3 className="text-base font-black text-[#131F24] dark:text-white">Community Hubs</h3>
+                  <p className="text-xs font-bold text-[#778B96] dark:text-[#A5A5A5] leading-relaxed">Join local sports clubs, see member registries, and get match directions.</p>
                 </div>
               </div>
             </div>
 
-            {/* Bottom CTA Banner (Duolingo Gamified Style) */}
-            <div className="p-10 sm:p-14 rounded-[3rem] bg-[#58CC02] text-white text-center space-y-6 shadow-xl relative overflow-hidden border-b-[8px] border-[#388000]">
-              
-              <h3 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight relative z-10">
-                Ready to jump onto the turf?
-              </h3>
-              <p className="text-base sm:text-lg font-bold text-emerald-100 max-w-xl mx-auto relative z-10">
-                Join {onboardedCount.toLocaleString()}+ athletes across Kerala. No spam, no mock data — pure turf sports action!
+            {/* Bottom CTA */}
+            <div className="p-8 sm:p-12 rounded-[2.5rem] bg-gradient-to-br from-[#58CC02] to-[#46A302] text-white text-center space-y-4 shadow-xl relative overflow-hidden border-b-[8px] border-[#388000]">
+              <h3 className="text-2xl sm:text-4xl font-black tracking-tight relative z-10">Ready to jump onto the turf?</h3>
+              <p className="text-sm sm:text-base font-bold text-emerald-100 max-w-lg mx-auto relative z-10">
+                Join {onboardedCount.toLocaleString()}+ athletes across Kerala. Pure sports action!
               </p>
               <div className="pt-2 relative z-10">
                 <button
                   onClick={() => setShowLogin(true)}
-                  className="px-10 py-5 rounded-2xl bg-white hover:bg-gray-100 text-[#58CC02] font-black text-lg uppercase tracking-wider shadow-2xl border-b-[6px] border-[#E5E5E5] active:translate-y-1 active:border-b-0 transition-all inline-flex items-center gap-2"
+                  className="px-8 py-4 rounded-2xl bg-white hover:bg-gray-100 text-[#58CC02] font-black text-base uppercase tracking-wider shadow-2xl border-b-[6px] border-[#E5E5E5] active:translate-y-1 active:border-b-0 transition-all inline-flex items-center gap-2"
                 >
                   <span>SIGN IN TO KALIKKANAALUNDO.COM</span>
-                  <ArrowRight className="w-6 h-6" />
+                  <ArrowRight className="w-5 h-5" />
                 </button>
               </div>
             </div>
@@ -489,31 +494,22 @@ export default function HomePage() {
         )}
       </main>
 
-      {/* Footer & Admin Cleanup Bar */}
-      <footer className="border-t border-[#E4E4E7] dark:border-[#262626] bg-white dark:bg-[#121212] py-8 mt-12 transition-colors">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-semibold text-[#71717A]">
+      {/* Footer */}
+      <footer className="border-t border-[#E4E4E7] dark:border-[#262626] bg-white dark:bg-[#121212] py-6 mt-12 transition-colors">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-semibold text-[#71717A]">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-lg bg-[#22C55E] text-white flex items-center justify-center font-bold text-xs">
-              C
+            <div className="w-5 h-5 rounded-lg overflow-hidden flex items-center justify-center bg-white dark:bg-[#1f2e35] border border-[#58CC02]/30 p-0.5">
+              <img src="/logo.png" alt="" className="w-full h-full object-contain" />
             </div>
-            <span>© 2026 kalikkanaalundo.com — Kerala's Real-Time Sports Network. All rights reserved.</span>
+            <span>© 2026 kalikkanaalundo.com — Kerala's Sports Network</span>
           </div>
-
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => setShowOnboarding(true)}
-              className="hover:text-[#171717] dark:hover:text-white transition-colors"
-            >
-              Player Onboarding
-            </button>
-            <button
-              onClick={loadData}
-              className="flex items-center gap-1 hover:text-[#171717] dark:hover:text-white transition-colors"
-            >
-              <RefreshCw className="w-3.5 h-3.5" />
-              <span>Refresh Feed</span>
-            </button>
-          </div>
+          <button
+            onClick={loadData}
+            className="flex items-center gap-1 hover:text-[#171717] dark:hover:text-white transition-colors"
+          >
+            <RefreshCw className="w-3.5 h-3.5" />
+            <span>Refresh</span>
+          </button>
         </div>
       </footer>
 
@@ -556,6 +552,16 @@ export default function HomePage() {
         userLat={userLat}
         userLng={userLng}
         userDistrict={currentUser?.district || "Ernakulam"}
+      />
+
+      <ProfileUpdatePrompt
+        isOpen={showProfileUpdatePrompt}
+        currentUser={currentUser}
+        onClose={() => setShowProfileUpdatePrompt(false)}
+        onComplete={(updated) => {
+          setCurrentUser(updated);
+          setShowProfileUpdatePrompt(false);
+        }}
       />
 
       <ChatModal

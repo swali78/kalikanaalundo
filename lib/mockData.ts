@@ -5,7 +5,9 @@ export function getSportEmoji(sport: Sport): string {
   const map: Record<Sport, string> = {
     Badminton: '🏸', Football: '⚽', Cricket: '🏏', Volleyball: '🏐',
     Basketball: '🏀', Tennis: '🎾', Pickleball: '🏓', 'Table Tennis': '🏓',
-    Running: '🏃', Cycling: '🚴',
+    Running: '🏃', Cycling: '🚴', Swimming: '🏊', Yoga: '🧘',
+    Dancing: '💃', Boxing: '🥊', 'Martial Arts': '🥋', Gym: '🏋️',
+    Athletics: '🏃', Skating: '⛸️', Chess: '♟️', Kabaddi: '🤼',
   };
   return map[sport] || '🏅';
 }
