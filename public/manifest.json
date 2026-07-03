@@ -1,0 +1,16 @@
+{
+  "name": "CIRCLE",
+  "short_name": "CIRCLE",
+  "description": "Never Play Alone. Find sports partners nearby in Kerala.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FAFAFA",
+  "theme_color": "#22C55E",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
+  ]
+}
