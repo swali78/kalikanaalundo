@@ -563,14 +563,16 @@ export function calculateHaversineDistance(lat1?: number, lon1?: number, lat2?: 
   return Math.round(R * c * 10) / 10;
 }
 
-// Fetch total onboarded users count
+// Fetch total onboarded users count from profiles table
 export async function fetchTotalOnboardedUsers(): Promise<number> {
   if (!supabase) return 0;
   try {
-    const { data, error } = await supabase.rpc('get_onboarded_users_count');
-    if (!error && typeof data === 'number') return data;
-  } catch (e) {
-    // fallback to 0 if RPC fails
+    const { count, error } = await supabase
+      .from('profiles')
+      .select('*', { count: 'exact', head: true });
+    if (!error && typeof count === 'number') return count;
+  } catch {
+    // fallback
   }
   return 0;
 }
