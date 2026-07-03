@@ -9,10 +9,15 @@ export async function GET(request: Request) {
   const errorDescription = requestUrl.searchParams.get('error_description');
   const next = requestUrl.searchParams.get('next') || '/';
 
-  // Determine true public origin behind Vercel / reverse proxy (handling comma-separated lists)
-  const forwardedHost = request.headers.get('x-forwarded-host')?.split(',')[0].trim();
-  const forwardedProto = request.headers.get('x-forwarded-proto')?.split(',')[0].trim() || 'https';
-  const origin = forwardedHost ? `${forwardedProto}://${forwardedHost}` : requestUrl.origin;
+  // Determine true public origin behind Vercel / reverse proxy
+  // In Vercel serverless containers, requestUrl.origin defaults to http://localhost:3000 if not parsed from headers.
+  const hostHeader = request.headers.get('x-forwarded-host')?.split(',')[0].trim()
+                  || request.headers.get('x-vercel-forwarded-host')?.split(',')[0].trim()
+                  || request.headers.get('host')?.split(',')[0].trim();
+  const protoHeader = request.headers.get('x-forwarded-proto')?.split(',')[0].trim()
+                   || (hostHeader?.includes('localhost') ? 'http' : 'https');
+  
+  const origin = hostHeader ? `${protoHeader}://${hostHeader}` : requestUrl.origin;
 
   if (error) {
     console.error('OAuth provider error:', error, errorDescription);
@@ -22,6 +27,7 @@ export async function GET(request: Request) {
   }
 
   if (code) {
+
     const supabase = await createClient();
 
     if (supabase) {
