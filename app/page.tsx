@@ -268,7 +268,7 @@ export default function HomePage() {
       />
 
       {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6">
+      <main className={`flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 py-4 sm:py-6 ${currentUser ? 'pb-24 md:pb-6' : ''}`}>
         {loading ? (
           <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
             <div className="relative">
@@ -279,9 +279,12 @@ export default function HomePage() {
                 <span className="text-white text-[10px] font-black animate-pulse">⚡</span>
               </div>
             </div>
-            <p className="text-sm font-semibold text-[#71717A] animate-pulse">
-              Connecting to kalikkanaalundo.com Live Network...
-            </p>
+            <div className="text-center space-y-1">
+              <span className="text-base font-black tracking-tight text-[#131F24] dark:text-white block animate-pulse">
+                കളിക്കാനാളട്ടുണ്ടോ?
+              </span>
+              <span className="text-xs font-bold text-[#778B96]">Loading Kerala Turf Network...</span>
+            </div>
           </div>
         ) : !currentUser ? (
           /* ================= DUOLINGO-STYLE UNAUTHENTICATED HERO ================= */
@@ -350,7 +353,7 @@ export default function HomePage() {
                 </div>
 
                 {/* CTA Buttons */}
-                <div className="space-y-3 pt-2 max-w-md">
+                <div className="space-y-3 pt-2 max-w-md mx-auto lg:mx-0">
                   <button
                     onClick={() => setShowLogin(true)}
                     className="w-full duo-btn-green text-base sm:text-lg !py-4 shadow-xl"
@@ -517,8 +520,8 @@ export default function HomePage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-[#E4E4E7] dark:border-[#262626] bg-white dark:bg-[#121212] py-6 mt-12 transition-colors">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-semibold text-[#71717A]">
+      <footer className={`border-t border-[#E4E4E7] dark:border-[#262626] bg-white dark:bg-[#121212] py-6 mt-12 transition-colors ${currentUser ? 'pb-24 md:pb-6' : ''}`}>
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-semibold text-[#71717A]">
           <div className="flex items-center gap-2">
             <div className="w-5 h-5 rounded-lg overflow-hidden flex items-center justify-center bg-white dark:bg-[#1f2e35] border border-[#58CC02]/30 p-0.5">
               <img src="/logo.png" alt="" className="w-full h-full object-contain" />

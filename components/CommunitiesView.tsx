@@ -66,10 +66,10 @@ export default function CommunitiesView({
               Join clubs, turfs, and sports leagues. Tap <strong>Route</strong> for directions!
             </p>
           </div>
-          <div className="flex items-center gap-2 self-stretch sm:self-auto">
+          <div className="flex items-center gap-2 w-full sm:w-auto">
             <button
               onClick={() => setShowMap(!showMap)}
-              className={`flex items-center gap-1.5 px-4 py-2.5 rounded-2xl text-xs font-black uppercase tracking-wider border-2 border-b-[4px] transition-all ${
+              className={`flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-2xl text-xs font-black uppercase tracking-wider border-2 border-b-[4px] transition-all ${
                 showMap
                   ? "bg-[#22C55E] text-white border-[#388000]"
                   : "bg-white dark:bg-[#1f2e35] text-[#131F24] dark:text-white border-[#E5E5E5] dark:border-[#37464F]"
@@ -81,7 +81,7 @@ export default function CommunitiesView({
             <select
               value={selectedDistrict}
               onChange={(e) => setSelectedDistrict(e.target.value)}
-              className="bg-[#E5E5E5] dark:bg-[#283941] text-[#131F24] dark:text-white font-black text-xs py-2 px-3 rounded-xl border-2 border-[#CCCCCC] dark:border-[#1C2A30] focus:outline-none cursor-pointer"
+              className="flex-1 sm:flex-initial bg-[#E5E5E5] dark:bg-[#283941] text-[#131F24] dark:text-white font-black text-xs py-2.5 px-3 rounded-xl border-2 border-[#CCCCCC] dark:border-[#1C2A30] focus:outline-none cursor-pointer"
             >
               {districts.map((d) => (
                 <option key={d} value={d}>{d}</option>

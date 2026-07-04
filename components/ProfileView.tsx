@@ -99,11 +99,11 @@ export default function ProfileView({
             </div>
           </div>
 
-          <div className="flex items-center gap-2.5 self-stretch sm:self-auto justify-end">
+          <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end">
             {!editing && (
               <button
                 onClick={() => setEditing(true)}
-                className="py-2.5 px-4 rounded-2xl text-xs font-black uppercase tracking-wider bg-white dark:bg-[#1f2e35] text-[#131F24] dark:text-white border-2 border-b-[4px] border-[#E5E5E5] dark:border-[#37464F] active:translate-y-[2px] active:border-b-2 transition-all flex items-center gap-1.5 select-none cursor-pointer shadow-sm"
+                className="flex-1 sm:flex-initial justify-center py-2.5 px-4 rounded-2xl text-xs font-black uppercase tracking-wider bg-white dark:bg-[#1f2e35] text-[#131F24] dark:text-white border-2 border-b-[4px] border-[#E5E5E5] dark:border-[#37464F] active:translate-y-[2px] active:border-b-2 transition-all flex items-center gap-1.5 select-none cursor-pointer shadow-sm"
               >
               <Edit3 className="w-3.5 h-3.5 text-[#1CB0F6]" />
               <span>EDIT PROFILE</span>
@@ -111,7 +111,7 @@ export default function ProfileView({
             )}
             <button
               onClick={handleSignOut}
-              className="p-2.5 rounded-2xl bg-[#FF4B4B]/15 text-[#FF4B4B] border-2 border-b-[4px] border-[#FF4B4B]/30 active:translate-y-[2px] active:border-b-2 transition-all hover:bg-[#FF4B4B]/20 select-none cursor-pointer"
+              className="p-2.5 rounded-2xl bg-[#FF4B4B]/15 text-[#FF4B4B] border-2 border-b-[4px] border-[#FF4B4B]/30 active:translate-y-[2px] active:border-b-2 transition-all hover:bg-[#FF4B4B]/20 select-none cursor-pointer shrink-0"
               title="Sign Out"
             >
               <LogOut className="w-5 h-5" />

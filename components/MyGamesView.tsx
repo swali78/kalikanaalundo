@@ -50,7 +50,7 @@ export default function MyGamesView({
 
   return (
     <div className="space-y-6 pb-12 fade-in">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div>
           <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#171717] dark:text-white">
             My Scheduled Matches ({myGames.length})
@@ -60,7 +60,7 @@ export default function MyGamesView({
           </p>
         </div>
 
-        <button onClick={onOpenHostModal} className="primary-btn !py-2.5 !px-5 text-sm">
+        <button onClick={onOpenHostModal} className="primary-btn !py-2.5 !px-5 text-sm w-full sm:w-auto text-center">
           + Host Game
         </button>
       </div>

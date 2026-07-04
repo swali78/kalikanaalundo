@@ -188,16 +188,16 @@ export default function DiscoverView({
               </button>
             ))}
           </div>
-          <div className="flex items-center bg-[#F4F4F5] dark:bg-[#1F1F1F] p-1 rounded-2xl border border-[#E4E4E7] dark:border-[#262626] shrink-0 self-start sm:self-auto">
+          <div className="flex items-center justify-center w-full sm:w-auto bg-[#F4F4F5] dark:bg-[#1F1F1F] p-1 rounded-2xl border border-[#E4E4E7] dark:border-[#262626] shrink-0">
             <button onClick={() => setViewMode("list")}
-              className={`flex items-center gap-1 px-3 py-1.5 rounded-xl text-[10px] font-bold transition-all ${
-                viewMode === "list" ? "bg-white dark:bg-[#121212] text-[#171717] dark:text-white shadow-sm" : "text-[#71717A] hover:text-[#171717]"
+              className={`flex-1 sm:flex-initial flex items-center justify-center gap-1 px-4 py-1.5 rounded-xl text-[10px] sm:text-xs font-extrabold transition-all cursor-pointer ${
+                viewMode === "list" ? "bg-white dark:bg-[#121212] text-[#171717] dark:text-white shadow-sm border border-gray-200 dark:border-gray-800" : "text-[#71717A] hover:text-[#171717] dark:hover:text-white"
               }`}>
               <ListIcon className="w-3.5 h-3.5" /><span>List</span>
             </button>
             <button onClick={() => setViewMode("map")}
-              className={`flex items-center gap-1 px-3 py-1.5 rounded-xl text-[10px] font-bold transition-all ${
-                viewMode === "map" ? "bg-[#22C55E] text-white shadow-sm" : "text-[#71717A] hover:text-[#171717]"
+              className={`flex-1 sm:flex-initial flex items-center justify-center gap-1 px-4 py-1.5 rounded-xl text-[10px] sm:text-xs font-extrabold transition-all cursor-pointer ${
+                viewMode === "map" ? "bg-[#22C55E] text-white shadow-sm border border-[#16a34a]" : "text-[#71717A] hover:text-[#171717] dark:hover:text-white"
               }`}>
               <MapIcon className="w-3.5 h-3.5" /><span>Map View</span>
             </button>

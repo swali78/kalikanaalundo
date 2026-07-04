@@ -123,11 +123,11 @@ export default function PlayersNearbyView({
               District Players <span className="text-[#58CC02]">Nearby</span>
             </h1>
           </div>
-          <div className="flex items-center gap-2 self-stretch sm:self-auto">
-            <div className="flex items-center bg-[#F4F4F5] dark:bg-[#1F1F1F] p-1 rounded-2xl border border-[#E4E4E7] dark:border-[#262626]">
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <div className="flex-1 sm:flex-initial flex items-center bg-[#F4F4F5] dark:bg-[#1F1F1F] p-1 rounded-2xl border border-[#E4E4E7] dark:border-[#262626]">
               <button
                 onClick={() => setViewMode("list")}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                className={`flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
                   viewMode === "list"
                     ? "bg-white dark:bg-[#121212] text-[#171717] dark:text-white shadow-sm"
                     : "text-[#71717A] hover:text-[#171717] dark:hover:text-white"
@@ -138,7 +138,7 @@ export default function PlayersNearbyView({
               </button>
               <button
                 onClick={() => setViewMode("map")}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                className={`flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
                   viewMode === "map"
                     ? "bg-[#22C55E] text-white shadow-sm"
                     : "text-[#71717A] hover:text-[#171717] dark:hover:text-white"
@@ -151,7 +151,7 @@ export default function PlayersNearbyView({
             <select
               value={activeDistrict}
               onChange={(e) => setActiveDistrict(e.target.value)}
-              className="bg-[#E5E5E5] dark:bg-[#283941] text-[#131F24] dark:text-white font-black text-xs py-2 px-3 rounded-xl border-2 border-[#CCCCCC] dark:border-[#1C2A30] focus:outline-none cursor-pointer"
+              className="flex-1 sm:flex-initial bg-[#E5E5E5] dark:bg-[#283941] text-[#131F24] dark:text-white font-black text-xs py-2.5 px-3 rounded-xl border-2 border-[#CCCCCC] dark:border-[#1C2A30] focus:outline-none cursor-pointer"
             >
               {districts.map((d) => (
                 <option key={d} value={d}>{d}</option>

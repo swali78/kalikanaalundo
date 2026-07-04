@@ -144,7 +144,7 @@ export default function HostGameModal({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-[#71717A] mb-1.5">
                 District
@@ -176,7 +176,7 @@ export default function HostGameModal({
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-[#71717A] mb-1.5">
                 Date
@@ -218,7 +218,7 @@ export default function HostGameModal({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-[#71717A] mb-1.5">
                 Skill Level
