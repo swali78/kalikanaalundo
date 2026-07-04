@@ -72,13 +72,16 @@ export default function HomePage() {
       setCommunities(commsList || []);
       if (count > 0) setOnboardedCount(count);
 
-      // Auto-trigger onboarding only for genuinely new users who haven't completed onboarding yet
       const isLocallyOnboarded = typeof window !== 'undefined' && (
         localStorage.getItem(`onboarded_${user?.id}`) === 'true' || 
         localStorage.getItem('onboarded_any') === 'true'
       );
 
-      if (user && !user.onboarded && !isLocallyOnboarded) {
+      // Think logically: Only trigger onboarding if the account was created recently (within last 10 minutes).
+      // If an already created account re-logs in, never show player onboarding!
+      const isNewAccount = user?.createdAt ? (Date.now() - new Date(user.createdAt).getTime() < 10 * 60 * 1000) : false;
+
+      if (user && !user.onboarded && !isLocallyOnboarded && isNewAccount) {
         setShowOnboarding(true);
       } else if (user && !localStorage.getItem('profile_update_shown')) {
         // One-time profile update prompt for existing users

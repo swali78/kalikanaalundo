@@ -33,6 +33,7 @@ export interface User {
   role?: 'player' | 'admin';
   onboarded?: boolean;
   distance?: number;
+  createdAt?: string;
 }
 
 export interface Game {

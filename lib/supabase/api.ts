@@ -84,6 +84,7 @@ function mapProfileToUser(profile: any): AppUser {
     privacyFuzzLocation: profile.privacy_fuzz_location ?? true,
     role: profile.role || 'player',
     onboarded: profile.onboarded === true || profile.onboarded === 'true' || (profile.age !== null && profile.age !== undefined && profile.city !== null && profile.city !== undefined && profile.sports && profile.sports.length > 0),
+    createdAt: profile.created_at || profile.updated_at || undefined,
   };
 }
 
@@ -101,7 +102,9 @@ export async function getCurrentUser(): Promise<AppUser | null> {
     .single();
 
   if (profile) {
-    return mapProfileToUser(profile);
+    const appUser = mapProfileToUser(profile);
+    appUser.createdAt = user.created_at || profile.created_at || new Date(0).toISOString();
+    return appUser;
   }
 
   // Auto-create minimal profile if missing (from trigger or here)
@@ -112,7 +115,11 @@ export async function getCurrentUser(): Promise<AppUser | null> {
   };
 
   const { data } = await supabase.from('profiles').insert(newProfile as any).select().single();
-  return data ? mapProfileToUser(data) : null;
+  const appUser = data ? mapProfileToUser(data) : null;
+  if (appUser) {
+    appUser.createdAt = user.created_at || new Date().toISOString();
+  }
+  return appUser;
 }
 
 // Fetch recommended players (simple overlap on sports, exclude self)
