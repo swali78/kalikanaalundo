@@ -70,7 +70,7 @@ export default function HomePage() {
 
       setGames(gamesList || []);
       setCommunities(commsList || []);
-      setOnboardedCount(count);
+      if (count > 0) setOnboardedCount(count);
 
       // Auto-trigger onboarding only for genuinely new users who haven't completed onboarding yet
       const isLocallyOnboarded = typeof window !== 'undefined' && (

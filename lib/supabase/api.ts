@@ -596,14 +596,33 @@ export function calculateHaversineDistance(lat1?: number, lon1?: number, lat2?: 
   return Math.round(R * c * 10) / 10;
 }
 
-// Fetch total onboarded users count from profiles table
+// Fetch total onboarded users count from profiles table (excluding incomplete registrations)
 export async function fetchTotalOnboardedUsers(): Promise<number> {
   if (!supabase) return 0;
   try {
-    const { count, error } = await supabase
+    // 1. Query users who explicitly have onboarded flag set to true
+    const { count: explicitCount, error: countErr } = await supabase
       .from('profiles')
-      .select('*', { count: 'exact', head: true });
-    if (!error && typeof count === 'number') return count;
+      .select('*', { count: 'exact', head: true })
+      .or('onboarded.eq.true,onboarded.eq."true"');
+    
+    if (!countErr && typeof explicitCount === 'number' && explicitCount > 0) {
+      return explicitCount;
+    }
+
+    // 2. Fallback: filter profiles to count only those who actually completed onboarding (selected sports & city)
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('onboarded, sports, age, city');
+    
+    if (!error && data) {
+      const onboardedCount = data.filter((p: any) => 
+        p.onboarded === true || 
+        p.onboarded === 'true' || 
+        (p.city && p.sports && Array.isArray(p.sports) && p.sports.length > 0)
+      ).length;
+      return onboardedCount;
+    }
   } catch {
     // fallback
   }
