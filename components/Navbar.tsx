@@ -43,28 +43,30 @@ export default function Navbar({
           <span>{onboardedCount.toLocaleString()} PLAYERS ONBOARDED</span>
         </div>
 
-        {/* Navigation Tabs */}
-        <nav className="flex items-center gap-0.5 sm:gap-1.5 bg-white/50 dark:bg-[#1f2e35]/50 p-1 rounded-2xl sm:rounded-3xl border-2 border-[#E5E5E5] dark:border-[#37464F] overflow-x-auto">
-          {[
-            { id: "discover" as View, label: "Home", short: "Home" },
-            { id: "players" as View, label: "Players", short: "Players" },
-            { id: "my-games" as View, label: "My Games", short: "Games" },
-            { id: "communities" as View, label: "Communities", short: "Hubs" },
-          ].map((tab) => {
-            const isActive = activeTab === tab.id;
-            return (
-              <button key={tab.id} onClick={() => onTabChange(tab.id)}
-                className={`px-2 sm:px-3.5 py-1.5 rounded-xl sm:rounded-2xl text-[10px] sm:text-xs font-extrabold uppercase tracking-wider transition-all duration-150 cursor-pointer select-none whitespace-nowrap ${
-                  isActive
-                    ? "bg-[#1CB0F6] text-white border-2 border-b-[3px] sm:border-b-[4px] border-[#1899D6] shadow-sm active:translate-y-[2px] active:border-b-[1px]"
-                    : "text-[#778B96] dark:text-[#A5B2BA] hover:text-[#131F24] dark:hover:text-white hover:bg-[#E5E5E5]/60 dark:hover:bg-[#283941]"
-                }`}>
-                <span className="hidden sm:inline">{tab.label}</span>
-                <span className="sm:hidden">{tab.short}</span>
-              </button>
-            );
-          })}
-        </nav>
+        {/* Navigation Tabs - Only show when logged in */}
+        {currentUser && (
+          <nav className="flex items-center gap-0.5 sm:gap-1.5 bg-white/50 dark:bg-[#1f2e35]/50 p-1 rounded-2xl sm:rounded-3xl border-2 border-[#E5E5E5] dark:border-[#37464F] overflow-x-auto">
+            {[
+              { id: "discover" as View, label: "Home", short: "Home" },
+              { id: "players" as View, label: "Players", short: "Players" },
+              { id: "my-games" as View, label: "My Games", short: "Games" },
+              { id: "communities" as View, label: "Communities", short: "Hubs" },
+            ].map((tab) => {
+              const isActive = activeTab === tab.id;
+              return (
+                <button key={tab.id} onClick={() => onTabChange(tab.id)}
+                  className={`px-2 sm:px-3.5 py-1.5 rounded-xl sm:rounded-2xl text-[10px] sm:text-xs font-extrabold uppercase tracking-wider transition-all duration-150 cursor-pointer select-none whitespace-nowrap ${
+                    isActive
+                      ? "bg-[#1CB0F6] text-white border-2 border-b-[3px] sm:border-b-[4px] border-[#1899D6] shadow-sm active:translate-y-[2px] active:border-b-[1px]"
+                      : "text-[#778B96] dark:text-[#A5B2BA] hover:text-[#131F24] dark:hover:text-white hover:bg-[#E5E5E5]/60 dark:hover:bg-[#283941]"
+                  }`}>
+                  <span className="hidden sm:inline">{tab.label}</span>
+                  <span className="sm:hidden">{tab.short}</span>
+                </button>
+              );
+            })}
+          </nav>
+        )}
 
         {/* Right Side */}
         <div className="flex items-center gap-1.5 sm:gap-2.5">
