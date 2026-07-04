@@ -24,6 +24,9 @@ const PlayersMap = dynamic(() => import("./PlayersMap"), {
 interface PlayersNearbyViewProps {
   currentUser: User | null;
   userDistrict: string;
+  userLat?: number;
+  userLng?: number;
+  isGpsActive?: boolean;
 }
 
 const districts = [
@@ -43,6 +46,9 @@ const sportsList: (Sport | "All")[] = [
 export default function PlayersNearbyView({
   currentUser,
   userDistrict,
+  userLat,
+  userLng,
+  isGpsActive,
 }: PlayersNearbyViewProps) {
   const [players, setPlayers] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -61,13 +67,16 @@ export default function PlayersNearbyView({
       const data = await fetchNearbyPlayers(
         currentUser.id,
         activeDistrict,
-        currentUser.sports || []
+        currentUser.sports || [],
+        userLat,
+        userLng,
+        isGpsActive
       );
       setPlayers(data);
       setLoading(false);
     }
     loadPlayers();
-  }, [currentUser, activeDistrict]);
+  }, [currentUser, activeDistrict, userLat, userLng, isGpsActive]);
 
   const filteredPlayers = players.filter((p) => {
     if (selectedSport === "All") return true;
@@ -182,8 +191,8 @@ export default function PlayersNearbyView({
           <PlayersMap
             players={filteredPlayers}
             currentUser={currentUser}
-            userLat={currentUser.latitude}
-            userLng={currentUser.longitude}
+            userLat={userLat || currentUser.latitude}
+            userLng={userLng || currentUser.longitude}
           />
         </div>
       ) : (
@@ -243,9 +252,14 @@ export default function PlayersNearbyView({
                           {player.name}
                           {player.verified && <span className="text-[#58CC02] text-xs">✓</span>}
                         </h3>
-                        <p className="text-[11px] text-[#778B96] font-bold flex items-center gap-1">
-                          <MapPin className="w-3 h-3 text-[#FF4B4B]" />
+                        <p className="text-[11px] text-[#778B96] font-bold flex items-center gap-1 flex-wrap">
+                          <MapPin className="w-3 h-3 text-[#FF4B4B] shrink-0" />
                           <span className="truncate">{player.city || player.district}</span>
+                          {player.distance !== undefined && (
+                            <span className="text-[#58CC02] ml-0.5 font-black">
+                              • {player.distance < 1 ? '< 1 km away' : `${Math.round(player.distance * 10) / 10} km away`}
+                            </span>
+                          )}
                         </p>
                         <div className="flex items-center gap-1.5 mt-1.5 flex-wrap">
                           <span className="px-2 py-0.5 rounded-lg bg-[#E5E5E5] dark:bg-[#283941] text-[10px] font-black">AGE {player.age || "20+"}</span>

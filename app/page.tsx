@@ -72,8 +72,13 @@ export default function HomePage() {
       setCommunities(commsList || []);
       setOnboardedCount(count);
 
-      // Auto-trigger onboarding for new users (no sports selected = fresh signup)
-      if (user && (!user.sports || user.sports.length === 0 || !user.city)) {
+      // Auto-trigger onboarding only for genuinely new users who haven't completed onboarding yet
+      const isLocallyOnboarded = typeof window !== 'undefined' && (
+        localStorage.getItem(`onboarded_${user?.id}`) === 'true' || 
+        localStorage.getItem('onboarded_any') === 'true'
+      );
+
+      if (user && !user.onboarded && !isLocallyOnboarded) {
         setShowOnboarding(true);
       } else if (user && !localStorage.getItem('profile_update_shown')) {
         // One-time profile update prompt for existing users
@@ -187,9 +192,15 @@ export default function HomePage() {
       rating: 5.0,
       gamesPlayed: 1,
       verified: true,
+      onboarded: true,
     };
 
     setCurrentUser(updatedUser);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(`onboarded_${updatedUser.id}`, 'true');
+      localStorage.setItem('onboarded_any', 'true');
+      localStorage.setItem('profile_update_shown', 'true');
+    }
     if (data.latitude && data.longitude) {
       setUserLat(data.latitude);
       setUserLng(data.longitude);
@@ -198,10 +209,8 @@ export default function HomePage() {
     setOnboardedCount((prev) => prev + 1);
     setShowOnboarding(false);
 
-    // Save to backend if logged in
-    if (currentUser) {
-      await updateProfile(updatedUser);
-    }
+    // Always save profile to backend when onboarding completes
+    await updateProfile(updatedUser);
 
     // Automatically join them to the first game chat as welcomed by system bot!
     if (games.length > 0) {
@@ -227,8 +236,14 @@ export default function HomePage() {
       latitude: 10.0159,
       longitude: 76.3419,
       privacyFuzzLocation: true,
+      onboarded: true,
     };
     setCurrentUser(demoUser);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(`onboarded_${demoUser.id}`, 'true');
+      localStorage.setItem('onboarded_any', 'true');
+      localStorage.setItem('profile_update_shown', 'true');
+    }
     setUserLat(demoUser.latitude);
     setUserLng(demoUser.longitude);
     setIsGpsActive(true);
@@ -450,6 +465,7 @@ export default function HomePage() {
                 onOpenChat={(game) => setActiveChatGame(game)}
                 onOpenHostModal={() => setShowHostModal(true)}
                 onOpenPlayNowModal={() => setShowPlayNowModal(true)}
+                onOpenPlayers={() => setActiveTab("players")}
                 userLat={userLat}
                 userLng={userLng}
                 isGpsActive={isGpsActive}
@@ -460,6 +476,9 @@ export default function HomePage() {
               <PlayersNearbyView
                 currentUser={currentUser}
                 userDistrict={currentUser.district || "Ernakulam"}
+                userLat={userLat}
+                userLng={userLng}
+                isGpsActive={isGpsActive}
               />
             )}
 

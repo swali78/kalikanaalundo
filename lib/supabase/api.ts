@@ -83,6 +83,7 @@ function mapProfileToUser(profile: any): AppUser {
     instagram: profile.instagram || undefined,
     privacyFuzzLocation: profile.privacy_fuzz_location ?? true,
     role: profile.role || 'player',
+    onboarded: profile.onboarded === true || profile.onboarded === 'true' || (profile.age !== null && profile.age !== undefined && profile.city !== null && profile.city !== undefined && profile.sports && profile.sports.length > 0),
   };
 }
 
@@ -132,29 +133,60 @@ export async function fetchRecommendedPlayers(currentUserId: string, currentSpor
     .slice(0, 10);
 }
 
-// Fetch nearby like-minded players in the same district
-export async function fetchNearbyPlayers(currentUserId: string, district: string, currentSports?: string[]): Promise<AppUser[]> {
+// Fetch nearby like-minded players in the same district or by GPS distance
+export async function fetchNearbyPlayers(
+  currentUserId: string, 
+  district: string, 
+  currentSports?: string[],
+  userLat?: number,
+  userLng?: number,
+  isGpsActive?: boolean
+): Promise<AppUser[]> {
   if (!supabase) return [];
 
-  const { data, error } = await supabase
-    .from('profiles')
-    .select('*')
-    .neq('id', currentUserId)
-    .ilike('district', `%${district}%`);
-
-  if (error || !data) {
-    // Fallback: if no exact district match, fetch all other players
-    const { data: allData } = await supabase.from('profiles').select('*').neq('id', currentUserId);
-    if (!allData) return [];
-    return allData
-      .filter((p: any) => p.id !== 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11' && p.name !== 'Demo User')
-      .map(mapProfileToUser);
+  // If GPS is active and we have coordinates, query all profiles to find everyone nearby by GPS distance
+  let query = supabase.from('profiles').select('*').neq('id', currentUserId);
+  if (!isGpsActive || userLat === undefined || userLng === undefined) {
+    query = query.ilike('district', `%${district}%`);
   }
 
-  let players = data
+  const { data, error } = await query;
+
+  let rawData = data;
+  if (error || !rawData || rawData.length === 0) {
+    // Fallback: fetch all other players
+    const { data: allData } = await supabase.from('profiles').select('*').neq('id', currentUserId);
+    if (!allData) return [];
+    rawData = allData;
+  }
+
+  let players = rawData
     .filter((p: any) => p.id !== 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11' && p.name !== 'Demo User')
-    .map(mapProfileToUser);
-  if (currentSports && currentSports.length > 0) {
+    .map((p: any) => {
+      const mapped = mapProfileToUser(p);
+      if (userLat !== undefined && userLng !== undefined) {
+        let pLat = mapped.latitude;
+        let pLng = mapped.longitude;
+        if (!pLat || !pLng) {
+          // Generate realistic deterministic approximate coordinates for demo/testing if missing
+          const hash = mapped.id.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
+          pLat = 10.0159 + ((hash % 20) - 10) * 0.005;
+          pLng = 76.3419 + (((hash * 3) % 20) - 10) * 0.005;
+        }
+        mapped.distance = calculateHaversineDistance(userLat, userLng, pLat, pLng);
+      }
+      return mapped;
+    });
+
+  if ((isGpsActive || (userLat !== undefined && userLng !== undefined)) && players.some((p: AppUser) => p.distance !== undefined)) {
+    // Sort closest players first
+    players.sort((a: AppUser, b: AppUser) => {
+      if (a.distance !== undefined && b.distance !== undefined) return a.distance - b.distance;
+      if (a.distance !== undefined) return -1;
+      if (b.distance !== undefined) return 1;
+      return 0;
+    });
+  } else if (currentSports && currentSports.length > 0) {
     // Sort players who share sports to the top
     players.sort((a: AppUser, b: AppUser) => {
       const aMatch = (a.sports || []).some((s: any) => currentSports.includes(s)) ? 1 : 0;
@@ -540,6 +572,7 @@ export async function updateProfile(updates: Partial<AppUser & { latitude?: numb
     lng: updates.longitude,
     privacy_fuzz_location: updates.privacyFuzzLocation,
     role: updates.role,
+    onboarded: updates.onboarded,
   };
 
   // Remove undefined

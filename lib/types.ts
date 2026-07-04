@@ -31,6 +31,8 @@ export interface User {
   instagram?: string;
   privacyFuzzLocation?: boolean;
   role?: 'player' | 'admin';
+  onboarded?: boolean;
+  distance?: number;
 }
 
 export interface Game {

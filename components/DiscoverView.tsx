@@ -23,6 +23,7 @@ interface DiscoverViewProps {
   userLat?: number;
   userLng?: number;
   isGpsActive?: boolean;
+  onOpenPlayers?: () => void;
 }
 
 const SPORTS_FILTER: (Sport | "All")[] = [
@@ -35,7 +36,7 @@ const SPORTS_FILTER: (Sport | "All")[] = [
 
 export default function DiscoverView({
   games, communities, currentUser, onJoinGame, onOpenChat,
-  onOpenHostModal, onOpenPlayNowModal, userLat, userLng, isGpsActive = false,
+  onOpenHostModal, onOpenPlayNowModal, onOpenPlayers, userLat, userLng, isGpsActive = false,
 }: DiscoverViewProps) {
   const [viewMode, setViewMode] = useState<"list" | "map">("list");
   const [selectedSport, setSelectedSport] = useState<Sport | "All">("All");
@@ -118,14 +119,20 @@ export default function DiscoverView({
           <MapIcon className="w-5 h-5 mx-auto" />
           <span className="text-[10px] font-black block uppercase tracking-wider">Nearby Games</span>
         </button>
-        <div className="p-4 rounded-2xl bg-white dark:bg-[#1f2e35] border-2 border-b-[5px] border-[#E5E5E5] dark:border-[#37464F] text-center space-y-1 shadow-sm">
+        <button
+          onClick={() => onOpenPlayers?.()}
+          className="p-4 rounded-2xl bg-white dark:bg-[#1f2e35] border-2 border-b-[5px] border-[#E5E5E5] dark:border-[#37464F] hover:-translate-y-1 transition-all text-center space-y-1 shadow-sm cursor-pointer"
+        >
           <Users className="w-5 h-5 mx-auto text-[#FFC800]" />
-          <span className="text-[10px] font-black block uppercase tracking-wider text-[#71717A]">Nearby Players</span>
-        </div>
-        <div className="p-4 rounded-2xl bg-white dark:bg-[#1f2e35] border-2 border-b-[5px] border-[#E5E5E5] dark:border-[#37464F] text-center space-y-1 shadow-sm">
+          <span className="text-[10px] font-black block uppercase tracking-wider text-[#71717A] group-hover:text-[#131F24] dark:group-hover:text-white">Nearby Players</span>
+        </button>
+        <button
+          onClick={() => onOpenPlayers?.()}
+          className="p-4 rounded-2xl bg-white dark:bg-[#1f2e35] border-2 border-b-[5px] border-[#E5E5E5] dark:border-[#37464F] hover:-translate-y-1 transition-all text-center space-y-1 shadow-sm cursor-pointer"
+        >
           <TrendingUp className="w-5 h-5 mx-auto text-[#FF4B4B]" />
-          <span className="text-[10px] font-black block uppercase tracking-wider text-[#71717A]">New Players</span>
-        </div>
+          <span className="text-[10px] font-black block uppercase tracking-wider text-[#71717A] group-hover:text-[#131F24] dark:group-hover:text-white">New Players</span>
+        </button>
       </div>
 
       {/* Hero Banner */}
