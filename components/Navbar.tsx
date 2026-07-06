@@ -13,11 +13,12 @@ interface NavbarProps {
   onboardedCount: number;
   isGpsActive?: boolean;
   onToggleGps?: () => void;
+  onOpenQuickMatch?: () => void;
 }
 
 export default function Navbar({
   activeTab, onTabChange, currentUser, onOpenLogin,
-  onOpenOnboarding, onboardedCount, isGpsActive = false, onToggleGps,
+  onOpenOnboarding, onboardedCount, isGpsActive = false, onToggleGps, onOpenQuickMatch,
 }: NavbarProps) {
   const navItems = [
     { id: "discover" as View, label: "Home", icon: Home },
@@ -76,6 +77,18 @@ export default function Navbar({
 
           {/* Right Side Actions */}
           <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
+            {/* Quick Match trigger */}
+            {currentUser && onOpenQuickMatch && (
+              <button
+                onClick={onOpenQuickMatch}
+                className="flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-xl sm:rounded-2xl text-[10px] sm:text-xs font-black uppercase tracking-wider bg-gradient-to-r from-[#FFC800] via-[#FFA000] to-[#FF8000] text-[#131F24] border-2 border-b-[3px] sm:border-b-[4px] border-[#C67A00] shadow-sm hover:opacity-95 active:translate-y-[2px] active:border-b-[1px] transition-all cursor-pointer select-none"
+                title="1-Click Quick Match Finder"
+              >
+                <span className="text-sm">⚡</span>
+                <span className="hidden sm:inline font-black">QUICK MATCH</span>
+              </button>
+            )}
+
             {/* GPS */}
             {currentUser && onToggleGps && (
               <button onClick={onToggleGps}

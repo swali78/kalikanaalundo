@@ -24,6 +24,7 @@ interface DiscoverViewProps {
   userLng?: number;
   isGpsActive?: boolean;
   onOpenPlayers?: () => void;
+  onOpenQuickMatch?: () => void;
 }
 
 const SPORTS_FILTER: (Sport | "All")[] = [
@@ -36,7 +37,7 @@ const SPORTS_FILTER: (Sport | "All")[] = [
 
 export default function DiscoverView({
   games, communities, currentUser, onJoinGame, onOpenChat,
-  onOpenHostModal, onOpenPlayNowModal, onOpenPlayers, userLat, userLng, isGpsActive = false,
+  onOpenHostModal, onOpenPlayNowModal, onOpenPlayers, onOpenQuickMatch, userLat, userLng, isGpsActive = false,
 }: DiscoverViewProps) {
   const [viewMode, setViewMode] = useState<"list" | "map">("list");
   const [selectedSport, setSelectedSport] = useState<Sport | "All">("All");
@@ -102,11 +103,11 @@ export default function DiscoverView({
       {/* Quick Action Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <button
-          onClick={onOpenPlayNowModal || onOpenHostModal}
-          className="p-4 rounded-2xl bg-gradient-to-br from-[#58CC02] to-[#46A302] text-white border-2 border-b-[5px] border-[#388000] hover:-translate-y-1 transition-all text-center space-y-1 shadow-lg"
+          onClick={onOpenQuickMatch || onOpenPlayNowModal || onOpenHostModal}
+          className="p-4 rounded-2xl bg-gradient-to-br from-[#FFC800] via-[#FFA000] to-[#FF8000] text-[#131F24] border-2 border-b-[5px] border-[#C67A00] hover:-translate-y-1 transition-all text-center space-y-1 shadow-lg cursor-pointer"
         >
-          <Zap className="w-5 h-5 mx-auto fill-current" />
-          <span className="text-[10px] font-black block uppercase tracking-wider">Quick Play</span>
+          <Zap className="w-5 h-5 mx-auto fill-current animate-bounce" />
+          <span className="text-[10px] font-black block uppercase tracking-wider">⚡ Quick Match</span>
         </button>
         <button
           onClick={() => setViewMode("map")}

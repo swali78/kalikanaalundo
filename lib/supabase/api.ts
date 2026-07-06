@@ -151,23 +151,16 @@ export async function fetchNearbyPlayers(
 ): Promise<AppUser[]> {
   if (!supabase) return [];
 
-  // If GPS is active and we have coordinates, query all profiles to find everyone nearby by GPS distance
+  // Strictly filter by district when requested, ensuring no bleed from other districts
   let query = supabase.from('profiles').select('*').neq('id', currentUserId);
-  if (!isGpsActive || userLat === undefined || userLng === undefined) {
+  if (district && district !== 'All') {
     query = query.ilike('district', `%${district}%`);
   }
 
   const { data, error } = await query;
+  if (error || !data) return [];
 
-  let rawData = data;
-  if (error || !rawData || rawData.length === 0) {
-    // Fallback: fetch all other players
-    const { data: allData } = await supabase.from('profiles').select('*').neq('id', currentUserId);
-    if (!allData) return [];
-    rawData = allData;
-  }
-
-  let players = rawData
+  let players = data
     .filter((p: any) => p.id !== 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11' && p.name !== 'Demo User')
     .map((p: any) => {
       const mapped = mapProfileToUser(p);
@@ -183,7 +176,8 @@ export async function fetchNearbyPlayers(
         mapped.distance = calculateHaversineDistance(userLat, userLng, pLat, pLng);
       }
       return mapped;
-    });
+    })
+    .filter((p: AppUser) => p.onboarded);
 
   if ((isGpsActive || (userLat !== undefined && userLng !== undefined)) && players.some((p: AppUser) => p.distance !== undefined)) {
     // Sort closest players first
@@ -629,6 +623,29 @@ export async function fetchTotalOnboardedUsers(): Promise<number> {
         (p.city && p.sports && Array.isArray(p.sports) && p.sports.length > 0)
       ).length;
       return onboardedCount;
+    }
+  } catch {
+    // fallback
+  }
+  return 0;
+}
+
+// Fetch onboarded users count for a specific district (or overall if district not specified)
+export async function fetchOnboardedUsersByDistrict(district?: string): Promise<number> {
+  if (!supabase) return 0;
+  try {
+    let query = supabase.from('profiles').select('onboarded, sports, age, city, district');
+    if (district && district !== 'All') {
+      query = query.ilike('district', `%${district}%`);
+    }
+    const { data, error } = await query;
+    if (!error && data) {
+      const count = data.filter((p: any) => 
+        p.onboarded === true || 
+        p.onboarded === 'true' || 
+        (p.city && p.sports && Array.isArray(p.sports) && p.sports.length > 0)
+      ).length;
+      return count;
     }
   } catch {
     // fallback

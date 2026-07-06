@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { User, Sport } from "@/lib/types";
-import { fetchNearbyPlayers } from "@/lib/supabase/api";
+import { fetchNearbyPlayers, fetchOnboardedUsersByDistrict, fetchTotalOnboardedUsers } from "@/lib/supabase/api";
 import { getSportEmoji } from "@/lib/mockData";
 import dynamic from "next/dynamic";
 import {
@@ -55,6 +55,9 @@ export default function PlayersNearbyView({
   const [selectedSport, setSelectedSport] = useState<Sport | "All">("All");
   const [activeDistrict, setActiveDistrict] = useState<string>(userDistrict || "Ernakulam");
   const [viewMode, setViewMode] = useState<"list" | "map">("list");
+  const [districtOnboardedCount, setDistrictOnboardedCount] = useState<number>(0);
+  const [totalOnboardedCount, setTotalOnboardedCount] = useState<number>(1248);
+  const [copiedInvite, setCopiedInvite] = useState<boolean>(false);
 
   useEffect(() => {
     async function loadPlayers() {
@@ -64,15 +67,21 @@ export default function PlayersNearbyView({
         return;
       }
       setLoading(true);
-      const data = await fetchNearbyPlayers(
-        currentUser.id,
-        activeDistrict,
-        currentUser.sports || [],
-        userLat,
-        userLng,
-        isGpsActive
-      );
+      const [data, distCount, totalCount] = await Promise.all([
+        fetchNearbyPlayers(
+          currentUser.id,
+          activeDistrict,
+          currentUser.sports || [],
+          userLat,
+          userLng,
+          isGpsActive
+        ),
+        fetchOnboardedUsersByDistrict(activeDistrict),
+        fetchTotalOnboardedUsers()
+      ]);
       setPlayers(data);
+      setDistrictOnboardedCount(distCount);
+      if (totalCount > 0) setTotalOnboardedCount(totalCount);
       setLoading(false);
     }
     loadPlayers();
@@ -115,9 +124,14 @@ export default function PlayersNearbyView({
       <div className="game-card p-5 sm:p-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="space-y-1 max-w-xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-[#58CC02]/15 border-2 border-[#58CC02]/30 text-xs font-black uppercase tracking-wider text-[#58CC02]">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>PLAYERS IN {activeDistrict.toUpperCase()}</span>
+            <div className="flex flex-wrap items-center gap-2">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-[#58CC02]/15 border-2 border-[#58CC02]/30 text-xs font-black uppercase tracking-wider text-[#58CC02]">
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>PLAYERS IN {activeDistrict.toUpperCase()}</span>
+              </div>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-[#FFC800]/15 border-2 border-[#FFC800]/30 text-xs font-black uppercase tracking-wider text-[#D97706] dark:text-[#FFC800]">
+                <span>🔥 {districtOnboardedCount > 0 ? districtOnboardedCount : filteredPlayers.length} ONBOARDED</span>
+              </div>
             </div>
             <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-[#131F24] dark:text-white">
               District Players <span className="text-[#58CC02]">Nearby</span>
@@ -221,11 +235,71 @@ export default function PlayersNearbyView({
               ))}
             </div>
           ) : filteredPlayers.length === 0 ? (
-            <div className="text-center py-16 px-6 rounded-3xl bg-white dark:bg-[#121212] border border-black/5 dark:border-white/10 space-y-3">
-              <div className="w-14 h-14 rounded-full bg-[#10B981]/15 text-[#10B981] flex items-center justify-center text-3xl mx-auto">👥</div>
-              <h3 className="text-lg font-bold text-[#171717] dark:text-white">No players in {activeDistrict}</h3>
-              <p className="text-xs text-[#71717A] max-w-sm mx-auto">Try a different district or sport filter</p>
-              <button onClick={() => setSelectedSport("All")} className="primary-btn !py-2 !px-5 text-xs mt-2 !inline-flex">Show All Sports</button>
+            <div className="py-12 px-6 sm:px-8 rounded-[2rem] bg-gradient-to-br from-white via-[#F8FAFC] to-[#F1F5F9] dark:from-[#1F2E35] dark:via-[#1A262C] dark:to-[#131F24] border-2 border-[#E5E5E5] dark:border-[#37464F] shadow-xl text-center space-y-6 max-w-2xl mx-auto my-6 relative overflow-hidden">
+              <div className="absolute top-0 right-0 px-4 py-1.5 bg-[#FFC800] text-[#131F24] font-black text-[10px] uppercase tracking-widest rounded-bl-2xl shadow-sm">
+                ⚡ DISTRICT PIONEER OPPORTUNITY
+              </div>
+              <div className="w-16 h-16 rounded-2xl bg-[#58CC02]/15 text-[#58CC02] flex items-center justify-center text-3xl mx-auto border-2 border-[#58CC02]/30 shadow-inner">
+                🚀
+              </div>
+              <div className="space-y-2 max-w-lg mx-auto">
+                <h3 className="text-xl sm:text-2xl font-black text-[#131F24] dark:text-white tracking-tight">
+                  No Onboarded Players yet in <span className="text-[#58CC02] underline decoration-wavy decoration-2">{activeDistrict}</span>!
+                </h3>
+                <p className="text-xs sm:text-sm text-[#778B96] dark:text-[#A5B2BA] font-bold leading-relaxed">
+                  Be the Pioneer! CIRCLE is expanding rapidly across Kerala. Invite your turf buddies or share to your social media to unlock instant games & matchmaking in {activeDistrict}.
+                </p>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-md mx-auto pt-2">
+                <button
+                  onClick={() => {
+                    const text = `Hey! I'm playing on CIRCLE — Kerala's premier sports turf & player matchmaking app! Join me on kalikkanaalundo.com so we can play together in ${activeDistrict}! ⚽🏸🏏`;
+                    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, "_blank");
+                  }}
+                  className="py-3.5 px-4 rounded-2xl bg-[#25D366] hover:bg-[#20BD5A] text-white font-black text-xs uppercase tracking-wider shadow-md border-2 border-b-[4px] border-[#189C48] active:translate-y-[2px] active:border-b-2 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <span>💬 Share via WhatsApp</span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    const text = `Join CIRCLE sports app to play badminton/football with me in ${activeDistrict}! https://kalikkanaalundo.com`;
+                    if (navigator.share) {
+                      navigator.share({ title: "CIRCLE Sports Network", text, url: "https://kalikkanaalundo.com" }).catch(() => {});
+                    } else {
+                      navigator.clipboard.writeText(text);
+                      setCopiedInvite(true);
+                      setTimeout(() => setCopiedInvite(false), 3000);
+                    }
+                  }}
+                  className="py-3.5 px-4 rounded-2xl bg-gradient-to-r from-[#833ab4] via-[#fd1d1d] to-[#fcb045] hover:opacity-95 text-white font-black text-xs uppercase tracking-wider shadow-md border-2 border-b-[4px] border-[#833ab4] active:translate-y-[2px] active:border-b-2 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <span>📸 Share to Socials</span>
+                </button>
+              </div>
+
+              <div className="pt-2">
+                <button
+                  onClick={() => {
+                    const text = `https://kalikkanaalundo.com/?ref=pioneer_${activeDistrict.toLowerCase()}`;
+                    navigator.clipboard.writeText(text);
+                    setCopiedInvite(true);
+                    setTimeout(() => setCopiedInvite(false), 3000);
+                  }}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#F4F4F5] dark:bg-[#283941] hover:bg-[#E5E5E5] text-[#131F24] dark:text-white font-black text-xs border border-[#CCCCCC] dark:border-[#37464F] transition-all cursor-pointer"
+                >
+                  <span>🔗 {copiedInvite ? "✓ Invite Link Copied!" : "Copy District Pioneer Link"}</span>
+                </button>
+              </div>
+
+              {/* Statewide reassurance counter */}
+              <div className="pt-4 border-t border-[#E5E5E5] dark:border-[#37464F] flex items-center justify-center gap-2 text-xs font-black text-[#778B96] dark:text-[#A5B2BA]">
+                <span>🔥 Across Kerala,</span>
+                <span className="text-[#58CC02]">{totalOnboardedCount.toLocaleString()}+ athletes</span>
+                <span>are already onboarded!</span>
+              </div>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">

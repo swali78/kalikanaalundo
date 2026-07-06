@@ -22,6 +22,7 @@ import OnboardingModal from "@/components/OnboardingModal";
 import LoginModal from "@/components/LoginModal";
 import HostGameModal from "@/components/HostGameModal";
 import PlayNowModal from "@/components/PlayNowModal";
+import QuickMatchModal from "@/components/QuickMatchModal";
 import ChatModal from "@/components/ChatModal";
 import CommunityDetailModal from "@/components/CommunityDetailModal";
 import ProfileUpdatePrompt from "@/components/ProfileUpdatePrompt";
@@ -46,6 +47,7 @@ export default function HomePage() {
   const [showLogin, setShowLogin] = useState<boolean>(false);
   const [showHostModal, setShowHostModal] = useState<boolean>(false);
   const [showPlayNowModal, setShowPlayNowModal] = useState<boolean>(false);
+  const [showQuickMatchModal, setShowQuickMatchModal] = useState<boolean>(false);
   const [activeChatGame, setActiveChatGame] = useState<Game | null>(null);
   const [activeCommunityDetail, setActiveCommunityDetail] = useState<Community | null>(null);
 
@@ -265,6 +267,7 @@ export default function HomePage() {
         onboardedCount={onboardedCount}
         isGpsActive={isGpsActive}
         onToggleGps={handleToggleGps}
+        onOpenQuickMatch={() => setShowQuickMatchModal(true)}
       />
 
       {/* Main Content Area */}
@@ -472,6 +475,7 @@ export default function HomePage() {
                 onOpenHostModal={() => setShowHostModal(true)}
                 onOpenPlayNowModal={() => setShowPlayNowModal(true)}
                 onOpenPlayers={() => setActiveTab("players")}
+                onOpenQuickMatch={() => setShowQuickMatchModal(true)}
                 userLat={userLat}
                 userLng={userLng}
                 isGpsActive={isGpsActive}
@@ -620,6 +624,19 @@ export default function HomePage() {
           setShowHostModal(true);
         }}
         currentUser={currentUser}
+      />
+
+      <QuickMatchModal
+        isOpen={showQuickMatchModal}
+        onClose={() => setShowQuickMatchModal(false)}
+        games={games}
+        currentUser={currentUser}
+        userLat={userLat}
+        userLng={userLng}
+        userDistrict={currentUser?.district || "Ernakulam"}
+        onJoinGame={handleJoinGame}
+        onOpenChat={(game) => setActiveChatGame(game)}
+        onOpenPlayNowModal={() => setShowPlayNowModal(true)}
       />
     </div>
   );
