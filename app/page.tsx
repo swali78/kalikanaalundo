@@ -289,7 +289,7 @@ export default function HomePage() {
               <span className="text-xs font-bold text-[#778B96]">Loading Kerala Turf Network...</span>
             </div>
           </div>
-        ) : !currentUser ? (
+        ) : !currentUser && activeTab !== "players" ? (
           /* ================= DUOLINGO-STYLE UNAUTHENTICATED HERO ================= */
           <div className="space-y-12 py-6 sm:py-10 fade-in max-w-6xl mx-auto">
             {/* Split Hero Layout */}
@@ -485,7 +485,7 @@ export default function HomePage() {
             {activeTab === "players" && (
               <PlayersNearbyView
                 currentUser={currentUser}
-                userDistrict={currentUser.district || "Ernakulam"}
+                userDistrict={currentUser?.district}
                 userLat={userLat}
                 userLng={userLng}
                 isGpsActive={isGpsActive}

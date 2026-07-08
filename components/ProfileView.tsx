@@ -83,7 +83,7 @@ export default function ProfileView({
               </div>
               <p className="text-xs font-bold text-[#778B96] dark:text-[#A5B2BA] flex items-center gap-1 mt-1 uppercase tracking-wider">
                 <MapPin className="w-3.5 h-3.5 text-[#FF4B4B]" />
-                <span>{currentUser.city}, {currentUser.district}</span>
+                <span>{[currentUser.city, currentUser.district].filter(Boolean).join(", ") || "Location not set — update your profile"}</span>
               </p>
               {currentUser.instagram && (
                 <a

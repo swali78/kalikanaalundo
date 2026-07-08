@@ -40,30 +40,15 @@ function mapGameRow(row: any, hostProfile: any, participants: any[] = []): Game 
   };
 }
 
-// Seed row shipped with the schema — never counted as a real onboarded player.
-const DEMO_PROFILE_ID = 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11';
-
-// A profile counts as a real onboarded player once an account exists with a
-// real display name — i.e. any registered player other than the shipped demo
-// seed row. We deliberately do NOT require city + sports here: those fields
-// were historically dropped by a broken profile upsert, so requiring them would
-// under-count every real signup as zero. Kept in one place so the counters and
-// the nearby-players filter agree on the same definition.
-function isOnboardedProfile(p: any): boolean {
-  if (!p) return false;
-  if (p.id === DEMO_PROFILE_ID || p.name === 'Demo User') return false;
-  return typeof p.name === 'string' && p.name.trim().length > 0;
-}
-
 function mapProfileToUser(profile: any): AppUser {
   if (!profile) {
     return {
       id: 'unknown',
       name: 'Unknown Player',
-      age: undefined,
+      age: 25,
       gender: undefined,
-      city: undefined,
-      district: undefined,
+      city: 'Kochi',
+      district: 'Ernakulam' as District,
       avatar: 'https://ui-avatars.com/api/?name=Unknown&background=22C55E&color=fff',
       bio: '',
       sports: [] as Sport[],
@@ -81,13 +66,10 @@ function mapProfileToUser(profile: any): AppUser {
   return {
     id: profile.id,
     name: profile.name,
-    // Never fabricate demographics — missing stays missing so the UI can be
-    // honest about incomplete profiles instead of showing everyone as
-    // "Kochi, age 25".
-    age: profile.age ?? undefined,
+    age: profile.age || 25,
     gender: profile.gender || undefined,
-    city: profile.city || undefined,
-    district: (profile.district || undefined) as District | undefined,
+    city: profile.city || 'Kochi',
+    district: (profile.district || 'Ernakulam') as District,
     avatar: profile.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.name || 'Player')}&background=22C55E&color=fff`,
     bio: profile.bio || '',
     sports: (profile.sports || []) as Sport[],
@@ -160,8 +142,8 @@ export async function fetchRecommendedPlayers(currentUserId: string, currentSpor
 
 // Fetch nearby like-minded players in the same district or by GPS distance
 export async function fetchNearbyPlayers(
-  currentUserId: string | null,
-  district: string,
+  currentUserId: string, 
+  district: string, 
   currentSports?: string[],
   userLat?: number,
   userLng?: number,
@@ -169,12 +151,8 @@ export async function fetchNearbyPlayers(
 ): Promise<AppUser[]> {
   if (!supabase) return [];
 
-  // Strictly filter by district when requested, ensuring no bleed from other districts.
-  // currentUserId is null for logged-out visitors browsing the public player list.
-  let query = supabase.from('profiles').select('*');
-  if (currentUserId) {
-    query = query.neq('id', currentUserId);
-  }
+  // Strictly filter by district when requested, ensuring no bleed from other districts
+  let query = supabase.from('profiles').select('*').neq('id', currentUserId);
   if (district && district !== 'All') {
     query = query.ilike('district', `%${district}%`);
   }
@@ -183,7 +161,7 @@ export async function fetchNearbyPlayers(
   if (error || !data) return [];
 
   let players = data
-    .filter(isOnboardedProfile)
+    .filter((p: any) => p.id !== 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11' && p.name !== 'Demo User')
     .map((p: any) => {
       const mapped = mapProfileToUser(p);
       if (userLat !== undefined && userLng !== undefined) {
@@ -198,7 +176,8 @@ export async function fetchNearbyPlayers(
         mapped.distance = calculateHaversineDistance(userLat, userLng, pLat, pLng);
       }
       return mapped;
-    });
+    })
+    .filter((p: AppUser) => p.onboarded);
 
   if ((isGpsActive || (userLat !== undefined && userLng !== undefined)) && players.some((p: AppUser) => p.distance !== undefined)) {
     // Sort closest players first
@@ -430,9 +409,9 @@ export async function fetchMessages(gameId: string): Promise<Message[]> {
     user: {
       id: m.user_id || 'player',
       name: m.profiles?.name || 'Player',
-      age: undefined,
-      city: undefined,
-      district: undefined,
+      age: 25,
+      city: 'Kochi',
+      district: 'Ernakulam',
       avatar: m.profiles?.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(m.profiles?.name || 'Player')}&background=22C55E&color=fff`,
       sports: [],
       skillLevel: 'Beginner',
@@ -509,9 +488,9 @@ export function subscribeToMessages(gameId: string, onMessage: (msg: Message) =>
           user: {
             id: payload.new.user_id || 'player',
             name: profile?.name || 'Player',
-            age: undefined,
-            city: undefined,
-            district: undefined,
+            age: 25,
+            city: 'Kochi',
+            district: 'Ernakulam',
             avatar: profile?.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile?.name || 'Player')}&background=22C55E&color=fff`,
             sports: [],
             skillLevel: 'Beginner',
@@ -578,12 +557,6 @@ export async function updateProfile(updates: Partial<AppUser & { latitude?: numb
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: 'Not logged in' };
 
-  // Core columns are written first in their own upsert. Extended columns
-  // (`onboarded`, `role`, `privacy_fuzz_location` — added by migration
-  // 20260708120000) are written in a separate best-effort update afterwards,
-  // so a missing column can never take down the core profile save again
-  // (the old single upsert 400'd entirely and silently lost onboarding data).
-  // Coordinates live in `latitude`/`longitude` (there are no lat/lng columns).
   const dbUpdates: any = {
     name: updates.name,
     age: updates.age,
@@ -596,31 +569,17 @@ export async function updateProfile(updates: Partial<AppUser & { latitude?: numb
     availability: updates.availability,
     avatar_url: updates.avatar,
     instagram: updates.instagram,
-    latitude: updates.latitude,
-    longitude: updates.longitude,
-  };
-
-  const extendedUpdates: any = {
-    onboarded: updates.onboarded,
-    role: updates.role,
+    lat: updates.latitude,
+    lng: updates.longitude,
     privacy_fuzz_location: updates.privacyFuzzLocation,
+    role: updates.role,
+    onboarded: updates.onboarded,
   };
 
   // Remove undefined
   Object.keys(dbUpdates).forEach(key => dbUpdates[key] === undefined && delete dbUpdates[key]);
-  Object.keys(extendedUpdates).forEach(key => extendedUpdates[key] === undefined && delete extendedUpdates[key]);
 
   const { error } = await supabase.from('profiles').upsert({ id: user.id, ...dbUpdates });
-
-  // Best-effort: ignore failures so an unapplied migration can't break the core save.
-  if (!error && Object.keys(extendedUpdates).length > 0) {
-    try {
-      await supabase.from('profiles').update(extendedUpdates).eq('id', user.id);
-    } catch {
-      // extended columns not present yet — core profile already saved
-    }
-  }
-
   return { error };
 }
 
@@ -642,20 +601,28 @@ export function calculateHaversineDistance(lat1?: number, lon1?: number, lat2?: 
 export async function fetchTotalOnboardedUsers(): Promise<number> {
   if (!supabase) return 0;
   try {
-    // Preferred: the public RPC counts profiles with onboarded = true
-    // (added by migration 20260708120000).
-    const { data: rpcCount, error: rpcErr } = await supabase.rpc('get_onboarded_users_count');
-    if (!rpcErr && typeof rpcCount === 'number' && rpcCount > 0) {
-      return rpcCount;
+    // 1. Query users who explicitly have onboarded flag set to true
+    const { count: explicitCount, error: countErr } = await supabase
+      .from('profiles')
+      .select('*', { count: 'exact', head: true })
+      .or('onboarded.eq.true,onboarded.eq."true"');
+    
+    if (!countErr && typeof explicitCount === 'number' && explicitCount > 0) {
+      return explicitCount;
     }
 
-    // Fallback (migration not applied yet): count real registered players.
+    // 2. Fallback: filter profiles to count only those who actually completed onboarding (selected sports & city)
     const { data, error } = await supabase
       .from('profiles')
-      .select('id, name, sports, city');
-
+      .select('onboarded, sports, age, city');
+    
     if (!error && data) {
-      return data.filter(isOnboardedProfile).length;
+      const onboardedCount = data.filter((p: any) => 
+        p.onboarded === true || 
+        p.onboarded === 'true' || 
+        (p.city && p.sports && Array.isArray(p.sports) && p.sports.length > 0)
+      ).length;
+      return onboardedCount;
     }
   } catch {
     // fallback
@@ -667,13 +634,18 @@ export async function fetchTotalOnboardedUsers(): Promise<number> {
 export async function fetchOnboardedUsersByDistrict(district?: string): Promise<number> {
   if (!supabase) return 0;
   try {
-    let query = supabase.from('profiles').select('id, name, sports, city, district');
+    let query = supabase.from('profiles').select('onboarded, sports, age, city, district');
     if (district && district !== 'All') {
       query = query.ilike('district', `%${district}%`);
     }
     const { data, error } = await query;
     if (!error && data) {
-      return data.filter(isOnboardedProfile).length;
+      const count = data.filter((p: any) => 
+        p.onboarded === true || 
+        p.onboarded === 'true' || 
+        (p.city && p.sports && Array.isArray(p.sports) && p.sports.length > 0)
+      ).length;
+      return count;
     }
   } catch {
     // fallback

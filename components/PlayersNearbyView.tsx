@@ -23,13 +23,16 @@ const PlayersMap = dynamic(() => import("./PlayersMap"), {
 
 interface PlayersNearbyViewProps {
   currentUser: User | null;
-  userDistrict: string;
+  userDistrict?: string;
   userLat?: number;
   userLng?: number;
   isGpsActive?: boolean;
 }
 
 const districts = [
+  // "All" shows every onboarded player statewide — also the only view that
+  // includes legacy signups whose district was lost to the old save bug.
+  "All",
   "Ernakulam", "Thiruvananthapuram", "Kozhikode", "Thrissur",
   "Malappuram", "Kollam", "Alappuzha", "Palakkad", "Kottayam",
   "Kannur", "Idukki", "Pathanamthitta", "Wayanad", "Kasaragod"
@@ -53,7 +56,7 @@ export default function PlayersNearbyView({
   const [players, setPlayers] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedSport, setSelectedSport] = useState<Sport | "All">("All");
-  const [activeDistrict, setActiveDistrict] = useState<string>(userDistrict || "Ernakulam");
+  const [activeDistrict, setActiveDistrict] = useState<string>(userDistrict || "All");
   const [viewMode, setViewMode] = useState<"list" | "map">("list");
   const [districtOnboardedCount, setDistrictOnboardedCount] = useState<number>(0);
   const [totalOnboardedCount, setTotalOnboardedCount] = useState<number>(1248);
@@ -61,17 +64,13 @@ export default function PlayersNearbyView({
 
   useEffect(() => {
     async function loadPlayers() {
-      if (!currentUser) {
-        setPlayers([]);
-        setLoading(false);
-        return;
-      }
+      // Player profiles are publicly browsable — guests see the full list too.
       setLoading(true);
       const [data, distCount, totalCount] = await Promise.all([
         fetchNearbyPlayers(
-          currentUser.id,
+          currentUser?.id ?? null,
           activeDistrict,
-          currentUser.sports || [],
+          currentUser?.sports || [],
           userLat,
           userLng,
           isGpsActive
@@ -97,26 +96,11 @@ export default function PlayersNearbyView({
     if (player.latitude && player.longitude) {
       window.open(`https://www.google.com/maps/dir/?api=1&destination=${player.latitude},${player.longitude}`, "_blank");
     } else {
-      const query = encodeURIComponent(`${player.city || player.district}, Kerala`);
+      const place = player.city || player.district;
+      const query = encodeURIComponent(place ? `${place}, Kerala` : "Kerala");
       window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, "_blank");
     }
   };
-
-  if (!currentUser) {
-    return (
-      <div className="text-center py-16 px-4 bg-white/5 dark:bg-black/20 rounded-3xl border border-white/10 backdrop-blur-md max-w-2xl mx-auto my-12">
-        <div className="w-16 h-16 rounded-3xl bg-[#10B981]/20 text-[#10B981] flex items-center justify-center text-3xl mx-auto mb-4 border border-[#10B981]/30">
-          🔐
-        </div>
-        <h3 className="text-2xl font-extrabold text-[#171717] dark:text-white mb-2">
-          Sign In to Discover Nearby Players
-        </h3>
-        <p className="text-sm text-[#71717A] max-w-md mx-auto mb-6">
-          Log in to view like-minded sports enthusiasts in your district and connect via instant Instagram DMs.
-        </p>
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-6 fade-in pb-12">
@@ -127,7 +111,7 @@ export default function PlayersNearbyView({
             <div className="flex flex-wrap items-center gap-2">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-[#58CC02]/15 border-2 border-[#58CC02]/30 text-xs font-black uppercase tracking-wider text-[#58CC02]">
                 <Sparkles className="w-3.5 h-3.5" />
-                <span>PLAYERS IN {activeDistrict.toUpperCase()}</span>
+                <span>{activeDistrict === "All" ? "PLAYERS ACROSS KERALA" : `PLAYERS IN ${activeDistrict.toUpperCase()}`}</span>
               </div>
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-[#FFC800]/15 border-2 border-[#FFC800]/30 text-xs font-black uppercase tracking-wider text-[#D97706] dark:text-[#FFC800]">
                 <span>🔥 {districtOnboardedCount > 0 ? districtOnboardedCount : filteredPlayers.length} ONBOARDED</span>
@@ -168,7 +152,7 @@ export default function PlayersNearbyView({
               className="flex-1 sm:flex-initial bg-[#E5E5E5] dark:bg-[#283941] text-[#131F24] dark:text-white font-black text-xs py-2.5 px-3 rounded-xl border-2 border-[#CCCCCC] dark:border-[#1C2A30] focus:outline-none cursor-pointer"
             >
               {districts.map((d) => (
-                <option key={d} value={d}>{d}</option>
+                <option key={d} value={d}>{d === "All" ? "All Kerala" : d}</option>
               ))}
             </select>
           </div>
@@ -205,8 +189,8 @@ export default function PlayersNearbyView({
           <PlayersMap
             players={filteredPlayers}
             currentUser={currentUser}
-            userLat={userLat || currentUser.latitude}
-            userLng={userLng || currentUser.longitude}
+            userLat={userLat || currentUser?.latitude}
+            userLng={userLng || currentUser?.longitude}
           />
         </div>
       ) : (
@@ -305,7 +289,7 @@ export default function PlayersNearbyView({
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {filteredPlayers.map((player) => {
                 const hasSharedSport = (player.sports || []).some((s) =>
-                  (currentUser.sports || []).includes(s)
+                  (currentUser?.sports || []).includes(s)
                 );
                 return (
                   <div key={player.id} className="game-card p-5 space-y-3 flex flex-col justify-between hover:border-[#58CC02] transition-all relative overflow-hidden group">
@@ -328,7 +312,9 @@ export default function PlayersNearbyView({
                         </h3>
                         <p className="text-[11px] text-[#778B96] font-bold flex items-center gap-1 flex-wrap">
                           <MapPin className="w-3 h-3 text-[#FF4B4B] shrink-0" />
-                          <span className="truncate">{player.city || player.district}</span>
+                          <span className={`truncate ${!(player.city || player.district) ? "italic opacity-70" : ""}`}>
+                            {player.city || player.district || "Location not set"}
+                          </span>
                           {player.distance !== undefined && (
                             <span className="text-[#58CC02] ml-0.5 font-black">
                               • {player.distance < 1 ? '< 1 km away' : `${Math.round(player.distance * 10) / 10} km away`}
@@ -336,7 +322,9 @@ export default function PlayersNearbyView({
                           )}
                         </p>
                         <div className="flex items-center gap-1.5 mt-1.5 flex-wrap">
-                          <span className="px-2 py-0.5 rounded-lg bg-[#E5E5E5] dark:bg-[#283941] text-[10px] font-black">AGE {player.age || "20+"}</span>
+                          {player.age !== undefined && player.age !== null && (
+                            <span className="px-2 py-0.5 rounded-lg bg-[#E5E5E5] dark:bg-[#283941] text-[10px] font-black">AGE {player.age}</span>
+                          )}
                           {player.skillLevel && (
                             <span className="px-2 py-0.5 rounded-lg bg-[#1CB0F6]/15 text-[#1CB0F6] text-[10px] font-black">{player.skillLevel}</span>
                           )}

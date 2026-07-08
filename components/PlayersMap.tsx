@@ -34,7 +34,7 @@ const currentUserIcon = L.divIcon({
 
 interface PlayersMapProps {
   players: User[];
-  currentUser: User;
+  currentUser: User | null;
   userLat?: number;
   userLng?: number;
 }
@@ -76,7 +76,7 @@ export default function PlayersMap({ players, currentUser, userLat, userLng }: P
         <RecenterMap lat={userLat} lng={userLng} />
 
         {/* Current User Marker */}
-        {currentUser.latitude && currentUser.longitude && (
+        {currentUser?.latitude && currentUser?.longitude && (
           <Marker position={[currentUser.latitude, currentUser.longitude]} icon={currentUserIcon}>
             <Popup>
               <div className="p-1 text-center">
@@ -100,7 +100,9 @@ export default function PlayersMap({ players, currentUser, userLat, userLng }: P
                     <img src={player.avatar} alt={player.name} className="w-8 h-8 rounded-xl object-cover border border-[#58CC02]" />
                     <div>
                       <p className="text-sm font-bold text-[#171717]">{player.name}</p>
-                      <p className="text-[10px] text-[#71717A]">{player.district} • {player.age || "20+"} yrs</p>
+                      <p className="text-[10px] text-[#71717A]">
+                        {[player.district || player.city, player.age ? `${player.age} yrs` : null].filter(Boolean).join(" • ") || "Profile incomplete"}
+                      </p>
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-1">

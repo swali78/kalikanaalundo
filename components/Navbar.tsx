@@ -20,12 +20,18 @@ export default function Navbar({
   activeTab, onTabChange, currentUser, onOpenLogin,
   onOpenOnboarding, onboardedCount, isGpsActive = false, onToggleGps, onOpenQuickMatch,
 }: NavbarProps) {
-  const navItems = [
-    { id: "discover" as View, label: "Home", icon: Home },
-    { id: "players" as View, label: "Players", icon: Users },
-    { id: "my-games" as View, label: "Games", icon: Calendar },
-    { id: "communities" as View, label: "Hubs", icon: Shield },
-  ];
+  const navItems = currentUser
+    ? [
+        { id: "discover" as View, label: "Home", icon: Home },
+        { id: "players" as View, label: "Players", icon: Users },
+        { id: "my-games" as View, label: "Games", icon: Calendar },
+        { id: "communities" as View, label: "Hubs", icon: Shield },
+      ]
+    : [
+        // Guests can browse the public player directory before signing up.
+        { id: "discover" as View, label: "Home", icon: Home },
+        { id: "players" as View, label: "Players", icon: Users },
+      ];
 
   return (
     <>
@@ -57,7 +63,7 @@ export default function Navbar({
           </div>
 
           {/* Navigation Tabs - Desktop Only */}
-          {currentUser && (
+          {(
             <nav className="hidden md:flex items-center gap-1.5 bg-white/50 dark:bg-[#1f2e35]/50 p-1 rounded-3xl border-2 border-[#E5E5E5] dark:border-[#37464F]">
               {navItems.map((tab) => {
                 const isActive = activeTab === tab.id;
@@ -125,8 +131,8 @@ export default function Navbar({
         </div>
       </header>
 
-      {/* Mobile Sticky Bottom Navigation Bar */}
-      {currentUser && (
+      {/* Mobile Sticky Bottom Navigation Bar (guests get Home + Players) */}
+      {(
         <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 dark:bg-[#131F24]/95 backdrop-blur-lg border-t-2 border-[#E5E5E5] dark:border-[#37464F] px-2 py-1.5 flex items-center justify-around shadow-[0_-4px_15px_rgba(0,0,0,0.08)]">
           {navItems.map((tab) => {
             const isActive = activeTab === tab.id;
@@ -149,7 +155,7 @@ export default function Navbar({
             );
           })}
           <button
-            onClick={() => onTabChange("profile")}
+            onClick={() => (currentUser ? onTabChange("profile") : onOpenLogin())}
             className={`flex flex-col items-center justify-center py-1 px-3 rounded-2xl transition-all cursor-pointer select-none ${
               activeTab === "profile"
                 ? "text-[#1CB0F6] dark:text-[#58CC02] font-black scale-105"
@@ -163,7 +169,7 @@ export default function Navbar({
                 <UserIcon className="w-5 h-5 stroke-[2px]" />
               )}
             </div>
-            <span className="text-[10px] uppercase tracking-wider mt-0.5">Profile</span>
+            <span className="text-[10px] uppercase tracking-wider mt-0.5">{currentUser ? "Profile" : "Join"}</span>
           </button>
         </nav>
       )}

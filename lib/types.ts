@@ -13,10 +13,12 @@ export type District =
 export interface User {
   id: string;
   name: string;
-  age: number;
+  // Optional: legacy profiles may genuinely lack these — never fabricate
+  // defaults (fake "Kochi"/"25" made every player look identical).
+  age?: number;
   gender?: 'Male' | 'Female' | 'Other' | 'Prefer not to say';
-  city: string;
-  district: District;
+  city?: string;
+  district?: District;
   avatar: string;
   bio?: string;
   sports: Sport[];

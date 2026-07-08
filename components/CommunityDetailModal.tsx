@@ -176,7 +176,7 @@ export default function CommunityDetailModal({
                           <div>
                             <p className="text-xs font-extrabold text-[#171717] dark:text-white flex items-center gap-1">
                               <span>{m.name}</span>
-                              <span className="text-[10px] text-[#71717A] font-normal">({m.age || "20+"} yrs)</span>
+                              {m.age ? <span className="text-[10px] text-[#71717A] font-normal">({m.age} yrs)</span> : null}
                             </p>
                             <p className="text-[11px] text-[#71717A] flex items-center gap-1">
                               <MapPin className="w-3 h-3 text-[#10B981]" />
